@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OS Places Lookup</title>
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 2rem;
+      line-height: 1.4;
+    }
+    .row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: end;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    input {
+      padding: 0.6rem 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      min-width: 240px;
+    }
+    button {
+      padding: 0.7rem 1.2rem;
+      border-radius: 0.6rem;
+      border: none;
+      background: #2563eb;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .card {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      background: #f9fafb;
+    }
+    .error {
+      color: #b91c1c;
+      font-weight: 700;
+    }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95rem;
+    }
+    .small {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+    .kv {
+      margin: 0.35rem 0;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>OS Places Address Lookup</h1>
+  <p class="small">
+    Uses the OS Places API <span class="mono">/search/places/v1/find</span> endpoint with
+    building number + postcode.
+  </p>
+
+  <div class="row">
+    <div>
+      <label>OS API Key</label>
+      <input id="apikey" placeholder="OS Data Hub API key" />
+      <div class="small">Prototype only – don’t expose keys client‑side in production.</div>
+    </div>
+
+    <div>
+      <label>Postcode</label>
+      <input id="postcode" value="EC2V 7QR" />
+    </div>
+
+    <div>
+      <label>Building number</label>
+      <input id="building" value="88" />
+    </div>
+
+    <button id="lookup">Lookup</button>
+  </div>
+
+  <div id="result" class="card">
+    <div class="small">Result will appear here.</div>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    function cleanPostcode(pc) {
+      return pc.trim().toUpperCase().replace(/\s+/g, " ");
+    }
+
+    function pickFirst(...vals) {
+      return vals.find(v => typeof v === "string" && v.trim()) || "";
+    }
+
+    $("lookup").addEventListener("click", async () => {
+      const apiKey = $("apikey").value.trim();
+      const postcode = cleanPostcode($("postcode").value);
+      const building = $("building").value.trim();
+
+      if (!apiKey || !postcode || !building) {
+        $("result").innerHTML = `<div class="error">Please enter API key, postcode, and building number.</div>`;
+        return;
+      }
+
+      const query = `${building} ${postcode}`;
+
+      const url = new URL("https://api.os.uk/search/places/v1/find");
+      url.searchParams.set("query", query);
+      url.searchParams.set("format", "JSON");
+      url.searchParams.set("maxresults", "5");
+
+      $("lookup").disabled = true;
+      $("result").innerHTML = `<div class="small">Looking up <span class="mono">${query}</span>…</div>`;
+
+      try {
+        const response = await fetch(url.toString(), {
+          headers: {
+            "key": apiKey,
+            "Accept": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const dpa = data?.results?.[0]?.DPA;
+
+        if (!dpa) {
+          $("result").innerHTML = `<div class="error">No matching address found.</div>`;
+          return;
+        }
+
+        const street  = pickFirst(dpa.THOROUGHFARE_NAME, dpa.DEPENDENT_THOROUGHFARE_NAME);
+        const city    = pickFirst(dpa.POST_TOWN);
+        const county  = pickFirst(dpa.COUNTY);
+        const uprn    = pickFirst(dpa.UPRN);
+        const pc      = pickFirst(dpa.POSTCODE);
+        const full    = pickFirst(dpa.ADDRESS);
+
+        $("result").innerHTML = `
+          <h2 style="margin-top:0">Address details</h2>
+          <div class="kv"><strong>Street:</strong> ${street || "—"}</div>
+          <div class="kv"><strong>City / Post town:</strong> ${city || "—"}</div>
+          <div class="kv"><strong>Postcode:</strong> ${pc || "—"}</div>
+          <div class="kv"><strong>County:</strong> ${county || "—"}</div>
+          <div class="kv"><strong>UPRN:</strong> <span class="mono">${uprn || "—"}</span></div>
+
+          <hr style="margin:1rem 0">
+
+          <div class="small"><strong>Full OS address string</strong></div>
+          <div class="mono">${full || "—"}</div>
+
+          <details style="margin-top:1rem">
+            <summary>Raw API response</summary>
+            <pre class="mono">${JSON.stringify(data, null, 2)}</pre>
+          </details>
+        `;
+
+      } catch (err) {
+        $("result").innerHTML = `<div class="error">Lookup failed: ${err.message}</div>`;
+      } finally {
+        $("lookup").disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

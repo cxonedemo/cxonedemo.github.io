@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cognigy AI – Animated Call Flow v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:#0a0c18;}
+
+  /* Animated background grid */
+  .bg-grid{position:fixed;top:0;left:0;width:120%;height:120%;z-index:0;opacity:.10;margin-left:-10%;margin-top:-10%;}
+  .bg-grid svg{width:100%;height:100%;}
+
+  /* Main container */
+  .container{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+
+  /* Title */
+  .title{text-align:center;margin-bottom:16px;opacity:0;}
+  .title h1{font-size:clamp(16px,2.6vw,36px);font-weight:700;color:#fff;letter-spacing:1px;}
+  .title h1 span.highlight{background:linear-gradient(135deg,#7c4dff,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .title .subtitle{font-size:clamp(9px,1.1vw,15px);color:rgba(255,255,255,0.45);margin-top:5px;font-weight:300;letter-spacing:2.5px;text-transform:uppercase;}
+
+  /* Stage */
+  .stage{display:flex;align-items:center;justify-content:center;width:92%;max-width:1300px;height:62vh;position:relative;}
+
+  /* Columns */
+  .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;height:100%;}
+  .col-center{flex:1.15;}
+
+  /* Panels */
+  .panel{
+    border-radius:20px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;
+    background:linear-gradient(145deg,rgba(58,29,126,0.32),rgba(107,63,160,0.14));
+    border:1px solid rgba(124,77,255,0.2);backdrop-filter:blur(12px);overflow:hidden;
+  }
+  .panel-student{width:88%;height:72%;}
+  .panel-cloud{width:94%;height:80%;}
+  .panel-agent{width:88%;height:72%;}
+
+  /* Labels */
+  .label{color:#fff;font-size:clamp(10px,1vw,14px);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:12px;opacity:0;text-align:center;}
+  .label-sub{color:rgba(255,255,255,0.35);font-size:clamp(8px,0.75vw,11px);font-weight:300;margin-top:2px;}
+
+  /* SVG figures */
+  .figure-svg{width:clamp(70px,7.5vw,120px);height:auto;opacity:0;}
+
+  /* Speech bubbles */
+  .speech-bubble{
+    position:absolute;top:5%;left:50%;transform:translateX(-50%);
+    background:rgba(255,255,255,0.07);border:1px solid rgba(124,77,255,0.3);
+    border-radius:14px;padding:10px 14px;
+    color:#e0d4ff;font-size:clamp(8px,0.78vw,12px);font-weight:400;line-height:1.5;
+    max-width:85%;min-height:2.8em;opacity:0;backdrop-filter:blur(6px);
+    text-align:center;
+  }
+  .speech-bubble::after{
+    content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);
+    width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;
+    border-top:7px solid rgba(124,77,255,0.3);
+  }
+
+  /* Cloud wrapper */
+  .cloud-wrapper{position:relative;display:flex;align-items:center;justify-content:center;width:100%;height:auto;}
+  .cloud-glow{
+    position:absolute;width:160px;height:160px;border-radius:50%;
+    background:radial-gradient(circle,rgba(124,77,255,0.3) 0%,transparent 70%);
+    filter:blur(28px);opacity:0;
+  }
+  .cloud-svg{width:clamp(110px,13vw,190px);height:auto;opacity:0;position:relative;z-index:2;}
+  .cloud-text{
+    position:absolute;color:#fff;font-size:clamp(12px,1.3vw,19px);font-weight:700;
+    letter-spacing:1px;text-align:center;opacity:0;z-index:3;
+  }
+  .cloud-text span{display:block;font-size:clamp(7px,0.65vw,10px);font-weight:300;letter-spacing:2px;color:rgba(255,255,255,0.45);margin-top:2px;}
+
+  /* Orbit ring around cloud */
+  .orbit-ring{position:absolute;width:clamp(150px,17vw,250px);height:clamp(150px,17vw,250px);border-radius:50%;border:1px dashed rgba(124,77,255,0.2);opacity:0;z-index:1;}
+  .orbit-dot{
+    position:absolute;width:7px;height:7px;border-radius:50%;
+    background:rgba(0,229,255,0.7);box-shadow:0 0 10px rgba(0,229,255,0.5);
+    top:-3.5px;left:50%;transform:translateX(-50%);
+  }
+  .orbit-dot2{
+    position:absolute;width:5px;height:5px;border-radius:50%;
+    background:rgba(124,77,255,0.8);box-shadow:0 0 8px rgba(124,77,255,0.5);
+    bottom:-2.5px;right:20%;
+  }
+
+  /* Neural network graph */
+  .neural-net{position:absolute;z-index:2;opacity:0;}
+
+  /* Process icons */
+  .process-icons{display:flex;gap:clamp(8px,1.2vw,16px);margin-top:14px;opacity:0;z-index:4;}
+  .p-icon{
+    width:clamp(32px,3vw,42px);height:clamp(32px,3vw,42px);border-radius:10px;
+    background:rgba(255,255,255,0.05);border:1px solid rgba(124,77,255,0.2);
+    display:flex;align-items:center;justify-content:center;
+    color:rgba(0,229,255,0.6);font-size:clamp(8px,0.7vw,10px);font-weight:600;letter-spacing:0.5px;
+    transition:all 0.3s;
+  }
+  .p-icon.active{
+    border-color:rgba(0,229,255,0.8);color:#00e5ff;
+    background:rgba(0,229,255,0.1);
+    box-shadow:0 0 15px rgba(0,229,255,0.25);
+  }
+
+  /* Equaliser bars */
+  .equaliser{display:flex;gap:3px;align-items:flex-end;height:30px;margin-top:10px;opacity:0;z-index:4;}
+  .eq-bar{
+    width:clamp(3px,0.35vw,5px);border-radius:2px;
+    background:linear-gradient(to top,rgba(124,77,255,0.8),rgba(0,229,255,0.6));
+    height:8px;
+  }
+
+  /* Floating data snippets */
+  .data-snippet{
+    position:absolute;padding:3px 8px;border-radius:6px;
+    background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.15);
+    color:rgba(0,229,255,0.6);font-size:clamp(7px,0.6vw,9px);font-weight:400;
+    font-family:'Courier New',monospace;letter-spacing:0.5px;
+    opacity:0;z-index:5;white-space:nowrap;
+  }
+
+  /* Processing indicator */
+  .processing-dot{
+    position:absolute;bottom:12%;width:10px;height:10px;border-radius:50%;
+    background:rgba(0,229,255,0.8);box-shadow:0 0 12px rgba(0,229,255,0.6);
+    opacity:0;z-index:5;
+  }
+
+  /* Connection lines SVG overlay */
+  .connections{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:6;}
+
+  /* Particles */
+  .particle{
+    position:absolute;width:5px;height:5px;border-radius:50%;
+    background:rgba(0,229,255,0.8);opacity:0;
+    box-shadow:0 0 8px rgba(0,229,255,0.5);z-index:7;
+  }
+  .particle.reverse{background:rgba(124,77,255,0.9);box-shadow:0 0 8px rgba(124,77,255,0.5);}
+
+  /* Sound wave rings */
+  .wave-ring{opacity:0;}
+
+  /* Badges */
+  .badge{
+    position:absolute;padding:4px 9px;border-radius:20px;
+    background:linear-gradient(135deg,rgba(124,77,255,0.3),rgba(0,229,255,0.15));
+    border:1px solid rgba(0,229,255,0.2);
+    color:rgba(255,255,255,0.6);font-size:clamp(7px,0.6vw,9px);font-weight:500;letter-spacing:0.8px;
+    text-transform:uppercase;opacity:0;
+  }
+
+  /* NiCE logo */
+  .nice-logo{
+    position:fixed;bottom:18px;right:28px;color:rgba(255,255,255,0.2);
+    font-size:13px;font-weight:700;letter-spacing:3px;opacity:0;z-index:10;
+  }
+
+  /* Turn indicator */
+  .turn-indicator{
+    position:absolute;bottom:6%;left:50%;transform:translateX(-50%);
+    display:flex;align-items:center;gap:8px;opacity:0;z-index:10;
+  }
+  .turn-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.15);}
+  .turn-dot.active{background:rgba(0,229,255,0.8);box-shadow:0 0 8px rgba(0,229,255,0.4);}
+</style>
+</head>
+<body>
+
+<!-- Background grid -->
+<div class="bg-grid">
+  <svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+        <circle cx="25" cy="25" r="0.7" fill="rgba(124,77,255,0.35)"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#grid)"/>
+  </svg>
+</div>
+
+<div class="container">
+  <div class="title">
+    <h1>End-to-End Call Flow — <span class="highlight">NiCE CXone & Cognigy</span></h1>
+    <div class="subtitle">Intelligent Bi-Directional Virtual Agent Conversation</div>
+  </div>
+
+  <div class="stage" id="stage">
+
+    <!-- Connection Lines -->
+    <svg class="connections" id="connSvg" viewBox="0 0 1300 600" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="lineGradLR" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="rgba(0,229,255,0.5)"/>
+          <stop offset="50%" stop-color="rgba(124,77,255,0.7)"/>
+          <stop offset="100%" stop-color="rgba(0,229,255,0.5)"/>
+        </linearGradient>
+        <linearGradient id="lineGradRL" x1="100%" y1="0%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="rgba(124,77,255,0.5)"/>
+          <stop offset="50%" stop-color="rgba(0,229,255,0.7)"/>
+          <stop offset="100%" stop-color="rgba(124,77,255,0.5)"/>
+        </linearGradient>
+      </defs>
+      <path id="pathLeft" d="M330,300 C410,270 450,310 530,295" fill="none" stroke="url(#lineGradLR)" stroke-width="1.5" stroke-dasharray="8,6" opacity="0"/>
+      <path id="pathRight" d="M770,295 C850,310 890,270 970,300" fill="none" stroke="url(#lineGradLR)" stroke-width="1.5" stroke-dasharray="8,6" opacity="0"/>
+    </svg>
+
+    <!-- LEFT – Student -->
+    <div class="col">
+      <div class="panel panel-student" id="panelStudent">
+        <div class="speech-bubble" id="bubbleStudent">
+          <span id="textStudent"></span><span id="cursorStudent" style="opacity:0;">|</span>
+        </div>
+        <svg class="figure-svg" id="studentSvg" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="60" r="35" fill="rgba(200,180,255,0.12)" stroke="rgba(124,77,255,0.55)" stroke-width="2"/>
+          <circle cx="88" cy="55" r="3" fill="rgba(0,229,255,0.8)"/>
+          <circle cx="112" cy="55" r="3" fill="rgba(0,229,255,0.8)"/>
+          <path d="M88,70 Q100,80 112,70" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M60,110 Q100,95 140,110 L145,200 Q100,210 55,200 Z" fill="rgba(200,180,255,0.08)" stroke="rgba(124,77,255,0.45)" stroke-width="1.5"/>
+          <path d="M140,130 L160,100 L165,80" fill="none" stroke="rgba(200,180,255,0.35)" stroke-width="3" stroke-linecap="round"/>
+          <rect x="158" y="68" width="18" height="30" rx="4" fill="rgba(124,77,255,0.35)" stroke="rgba(0,229,255,0.55)" stroke-width="1.5"/>
+          <rect x="161" y="73" width="12" height="18" rx="2" fill="rgba(0,229,255,0.12)"/>
+          <line x1="80" y1="200" x2="70" y2="265" stroke="rgba(200,180,255,0.25)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="120" y1="200" x2="130" y2="265" stroke="rgba(200,180,255,0.25)" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Sound waves -->
+          <circle class="wave-ring" id="wave1" cx="167" cy="75" r="12" fill="none" stroke="rgba(0,229,255,0.5)" stroke-width="1.2"/>
+          <circle class="wave-ring" id="wave2" cx="167" cy="75" r="20" fill="none" stroke="rgba(0,229,255,0.3)" stroke-width="1"/>
+          <circle class="wave-ring" id="wave3" cx="167" cy="75" r="28" fill="none" stroke="rgba(0,229,255,0.15)" stroke-width="0.8"/>
+        </svg>
+        <div class="badge" id="badgeVoice" style="bottom:12%;left:8%;">&#127908; Voice</div>
+      </div>
+      <div class="label" id="labelStudent">Student<div class="label-sub">Consumer</div></div>
+    </div>
+
+    <!-- CENTRE – AI Engine -->
+    <div class="col col-center">
+      <div class="panel panel-cloud" id="panelCloud">
+
+        <!-- Data snippets floating -->
+        <div class="data-snippet" id="snip1" style="top:10%;left:8%;">&lt;intent&gt;</div>
+        <div class="data-snippet" id="snip2" style="top:18%;right:6%;">{entity}</div>
+        <div class="data-snippet" id="snip3" style="bottom:28%;left:12%;">confidence: 0.97</div>
+        <div class="data-snippet" id="snip4" style="bottom:20%;right:10%;">slot: "enrollment"</div>
+        <div class="data-snippet" id="snip5" style="top:38%;left:5%;">token_count: 142</div>
+        <div class="data-snippet" id="snip6" style="top:32%;right:4%;">context.active</div>
+
+        <div class="cloud-wrapper">
+          <div class="cloud-glow" id="cloudGlow"></div>
+
+          <!-- Orbit ring -->
+          <div class="orbit-ring" id="orbitRing">
+            <div class="orbit-dot"></div>
+            <div class="orbit-dot2"></div>
+          </div>
+
+          <!-- Neural network SVG -->
+          <svg class="neural-net" id="neuralNet" width="160" height="120" viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Connections -->
+            <line x1="30" y1="30" x2="80" y2="20" stroke="rgba(0,229,255,0.2)" stroke-width="0.8"/>
+            <line x1="30" y1="30" x2="80" y2="60" stroke="rgba(124,77,255,0.2)" stroke-width="0.8"/>
+            <line x1="30" y1="30" x2="80" y2="100" stroke="rgba(0,229,255,0.15)" stroke-width="0.8"/>
+            <line x1="30" y1="90" x2="80" y2="20" stroke="rgba(124,77,255,0.15)" stroke-width="0.8"/>
+            <line x1="30" y1="90" x2="80" y2="60" stroke="rgba(0,229,255,0.2)" stroke-width="0.8"/>
+            <line x1="30" y1="90" x2="80" y2="100" stroke="rgba(124,77,255,0.2)" stroke-width="0.8"/>
+            <line x1="80" y1="20" x2="130" y2="40" stroke="rgba(0,229,255,0.2)" stroke-width="0.8"/>
+            <line x1="80" y1="60" x2="130" y2="40" stroke="rgba(124,77,255,0.2)" stroke-width="0.8"/>
+            <line x1="80" y1="100" x2="130" y2="40" stroke="rgba(0,229,255,0.15)" stroke-width="0.8"/>
+            <line x1="80" y1="20" x2="130" y2="80" stroke="rgba(124,77,255,0.15)" stroke-width="0.8"/>
+            <line x1="80" y1="60" x2="130" y2="80" stroke="rgba(0,229,255,0.2)" stroke-width="0.8"/>
+            <line x1="80" y1="100" x2="130" y2="80" stroke="rgba(124,77,255,0.2)" stroke-width="0.8"/>
+            <!-- Nodes -->
+            <circle cx="30" cy="30" r="5" fill="rgba(0,229,255,0.5)" class="nn-node"/>
+            <circle cx="30" cy="90" r="5" fill="rgba(124,77,255,0.5)" class="nn-node"/>
+            <circle cx="80" cy="20" r="4" fill="rgba(0,229,255,0.4)" class="nn-node"/>
+            <circle cx="80" cy="60" r="5" fill="rgba(124,77,255,0.6)" class="nn-node"/>
+            <circle cx="80" cy="100" r="4" fill="rgba(0,229,255,0.4)" class="nn-node"/>
+            <circle cx="130" cy="40" r="5" fill="rgba(0,229,255,0.5)" class="nn-node"/>
+            <circle cx="130" cy="80" r="5" fill="rgba(124,77,255,0.5)" class="nn-node"/>
+          </svg>
+
+          <!-- Cloud SVG -->
+          <svg class="cloud-svg" id="cloudSvg" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="rgba(124,77,255,0.5)"/>
+                <stop offset="100%" stop-color="rgba(0,229,255,0.3)"/>
+              </linearGradient>
+            </defs>
+            <path d="M60,150 Q10,150 15,110 Q5,80 40,70 Q35,30 80,30 Q100,5 140,15 Q170,0 200,20 Q240,10 260,45 Q295,50 290,90 Q300,130 260,140 Q270,165 240,160 L60,160 Z"
+                  fill="rgba(124,77,255,0.10)" stroke="url(#cloudGrad)" stroke-width="2"/>
+            <!-- Inner circuit -->
+            <line x1="80" y1="90" x2="130" y2="90" stroke="rgba(0,229,255,0.15)" stroke-width="0.8" stroke-dasharray="3,3"/>
+            <line x1="140" y1="70" x2="140" y2="120" stroke="rgba(0,229,255,0.15)" stroke-width="0.8" stroke-dasharray="3,3"/>
+            <line x1="160" y1="90" x2="220" y2="90" stroke="rgba(0,229,255,0.15)" stroke-width="0.8" stroke-dasharray="3,3"/>
+            <circle cx="130" cy="90" r="3" fill="rgba(0,229,255,0.35)"/>
+            <circle cx="160" cy="90" r="3" fill="rgba(124,77,255,0.5)"/>
+            <circle cx="140" cy="70" r="3" fill="rgba(0,229,255,0.35)"/>
+            <circle cx="140" cy="120" r="3" fill="rgba(124,77,255,0.35)"/>
+          </svg>
+
+          <div class="cloud-text" id="cloudText">Cognigy AI<span>Virtual Agent Platform</span></div>
+        </div>
+
+        <!-- Equaliser -->
+        <div class="equaliser" id="equaliser"></div>
+
+        <!-- Process icons -->
+        <div class="process-icons" id="processIcons">
+          <div class="p-icon" id="piSTT">STT</div>
+          <div class="p-icon" id="piNLP">NLP</div>
+          <div class="p-icon" id="piLLM">LLM</div>
+          <div class="p-icon" id="piTTS">TTS</div>
+        </div>
+
+        <!-- Processing dot -->
+        <div class="processing-dot" id="procDot"></div>
+
+      </div>
+      <div class="label" id="labelCloud">AI Engine<div class="label-sub">Processing</div></div>
+    </div>
+
+    <!-- RIGHT – AI Agent -->
+    <div class="col">
+      <div class="panel panel-agent" id="panelAgent">
+        <div class="speech-bubble" id="bubbleAgent">
+          <span id="textAgent"></span><span id="cursorAgent" style="opacity:0;">|</span>
+        </div>
+        <svg class="figure-svg" id="agentSvg" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+          <path d="M55,55 Q55,15 100,15 Q145,15 145,55" fill="none" stroke="rgba(0,229,255,0.45)" stroke-width="2.5"/>
+          <rect x="45" y="48" width="16" height="24" rx="6" fill="rgba(0,229,255,0.15)" stroke="rgba(0,229,255,0.45)" stroke-width="1.5"/>
+          <rect x="139" y="48" width="16" height="24" rx="6" fill="rgba(0,229,255,0.15)" stroke="rgba(0,229,255,0.45)" stroke-width="1.5"/>
+          <circle cx="100" cy="60" r="35" fill="rgba(0,229,255,0.06)" stroke="rgba(0,229,255,0.45)" stroke-width="2"/>
+          <rect x="82" y="48" width="10" height="6" rx="2" fill="rgba(0,229,255,0.8)"/>
+          <rect x="108" y="48" width="10" height="6" rx="2" fill="rgba(0,229,255,0.8)"/>
+          <rect x="83" y="68" width="34" height="8" rx="3" fill="rgba(124,77,255,0.25)" stroke="rgba(0,229,255,0.35)" stroke-width="1"/>
+          <line x1="90" y1="70" x2="90" y2="74" stroke="rgba(0,229,255,0.6)" stroke-width="1.5"/>
+          <line x1="96" y1="69" x2="96" y2="75" stroke="rgba(0,229,255,0.8)" stroke-width="1.5"/>
+          <line x1="102" y1="70" x2="102" y2="74" stroke="rgba(0,229,255,0.6)" stroke-width="1.5"/>
+          <line x1="108" y1="69" x2="108" y2="75" stroke="rgba(0,229,255,0.4)" stroke-width="1.5"/>
+          <path d="M60,110 Q100,95 140,110 L145,200 Q100,210 55,200 Z" fill="rgba(0,229,255,0.05)" stroke="rgba(0,229,255,0.35)" stroke-width="1.5"/>
+          <rect x="80" y="130" width="40" height="30" rx="5" fill="rgba(124,77,255,0.12)" stroke="rgba(124,77,255,0.35)" stroke-width="1"/>
+          <circle cx="92" cy="145" r="3" fill="rgba(0,229,255,0.4)"/>
+          <circle cx="104" cy="141" r="2" fill="rgba(124,77,255,0.5)"/>
+          <circle cx="108" cy="151" r="2.5" fill="rgba(0,229,255,0.35)"/>
+          <line x1="80" y1="200" x2="70" y2="265" stroke="rgba(0,229,255,0.2)" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="120" y1="200" x2="130" y2="265" stroke="rgba(0,229,255,0.2)" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M53,64 L40,85 L45,88" fill="none" stroke="rgba(0,229,255,0.45)" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="45" cy="90" r="4" fill="rgba(0,229,255,0.25)" stroke="rgba(0,229,255,0.5)" stroke-width="1"/>
+          <!-- Agent waves -->
+          <circle class="wave-ring" id="waveA1" cx="40" cy="90" r="12" fill="none" stroke="rgba(124,77,255,0.5)" stroke-width="1.2"/>
+          <circle class="wave-ring" id="waveA2" cx="40" cy="90" r="20" fill="none" stroke="rgba(124,77,255,0.3)" stroke-width="1"/>
+          <circle class="wave-ring" id="waveA3" cx="40" cy="90" r="28" fill="none" stroke="rgba(124,77,255,0.15)" stroke-width="0.8"/>
+        </svg>
+        <div class="badge" id="badgeAI" style="bottom:12%;right:8%;">&#129302; GenAI</div>
+      </div>
+      <div class="label" id="labelAgent">AI Agent<div class="label-sub">Cognigy</div></div>
+    </div>
+
+    <!-- Particles container -->
+    <div id="particles" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:7;"></div>
+
+    <!-- Turn indicator -->
+    <div class="turn-indicator" id="turnIndicator">
+      <div class="turn-dot" id="td0"></div>
+      <div class="turn-dot" id="td1"></div>
+      <div class="turn-dot" id="td2"></div>
+      <div class="turn-dot" id="td3"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="nice-logo" id="niceLogo">NiCE</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  // ── Build equaliser bars ──
+  const eqEl = document.getElementById('equaliser');
+  for(let i=0;i<24;i++){
+    const bar = document.createElement('div');
+    bar.classList.add('eq-bar');
+    bar.id = 'eq'+i;
+    eqEl.appendChild(bar);
+  }
+
+  // ── Build particles ──
+  const particlesEl = document.getElementById('particles');
+  function mkP(id,cls){
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    if(cls) p.classList.add(cls);
+    p.id = id;
+    particlesEl.appendChild(p);
+    return p;
+  }
+  for(let i=0;i<10;i++) mkP('pL'+i);
+  for(let i=0;i<10;i++) mkP('pR'+i);
+  for(let i=0;i<10;i++) mkP('pRL'+i,'reverse');
+  for(let i=0;i<10;i++) mkP('pRR'+i,'reverse');
+
+  // ── INTRO TIMELINE ──
+  const tl = anime.timeline({ easing:'easeOutExpo' });
+  tl.add({ targets:'.title', opacity:[0,1], translateY:[-30,0], duration:1200 });
+  tl.add({ targets:'#panelStudent', opacity:[0,1], translateX:[-50,0], duration:900 },'-=600');
+  tl.add({ targets:'#panelCloud', opacity:[0,1], scale:[0.85,1], duration:900 },'-=700');
+  tl.add({ targets:'#panelAgent', opacity:[0,1], translateX:[50,0], duration:900 },'-=700');
+  tl.add({ targets:'.figure-svg', opacity:[0,1], scale:[0.88,1], duration:700, easing:'easeOutBack' },'-=400');
+  tl.add({ targets:'.label', opacity:[0,1], translateY:[8,0], duration:500, delay:anime.stagger(120) },'-=300');
+  tl.add({ targets:'#pathLeft, #pathRight', opacity:[0,0.7], duration:700 },'-=300');
+  tl.add({ targets:'#cloudText', opacity:[0,1], duration:700 },'-=500');
+  tl.add({ targets:'#cloudGlow', opacity:[0,0.6], duration:700 },'-=500');
+  tl.add({ targets:'#neuralNet', opacity:[0,0.8], duration:700 },'-=400');
+  tl.add({ targets:'#orbitRing', opacity:[0,0.8], duration:700 },'-=500');
+  tl.add({ targets:'#processIcons', opacity:[0,1], duration:100 },'-=500');
+  tl.add({ targets:'.p-icon', opacity:[0,1], translateY:[10,0], duration:400, delay:anime.stagger(100) },'-=500');
+  tl.add({ targets:'#equaliser', opacity:[0,1], duration:400 },'-=300');
+  tl.add({ targets:'.badge', opacity:[0,1], scale:[0.85,1], duration:500, delay:anime.stagger(180) },'-=200');
+  tl.add({ targets:'#turnIndicator', opacity:[0,1], duration:400 },'-=200');
+  tl.add({ targets:'#niceLogo', opacity:[0,0.2], duration:600 },'-=300');
+
+  // ── PERSISTENT AMBIENT ANIMATIONS ──
+
+  // Cloud bob
+  anime({ targets:'#cloudSvg', translateY:[-5,5], duration:3200, easing:'easeInOutSine', direction:'alternate', loop:true });
+  anime({ targets:'#cloudText', translateY:[-3,3], duration:3200, easing:'easeInOutSine', direction:'alternate', loop:true });
+
+  // Cloud glow pulse
+  anime({ targets:'#cloudGlow', scale:[1,1.12], opacity:[0.45,0.75], duration:2800, easing:'easeInOutSine', direction:'alternate', loop:true });
+
+  // Orbit ring rotation
+  anime({ targets:'#orbitRing', rotate:'1turn', duration:12000, easing:'linear', loop:true });
+
+  // Neural net nodes pulse
+  anime({ targets:'.nn-node', r:[{value:function(el){return parseFloat(el.getAttribute('r'))*0.6;},duration:800},{value:function(el){return parseFloat(el.getAttribute('r'));},duration:800}],
+    opacity:[0.4,1,0.4], easing:'easeInOutSine', delay:anime.stagger(200), loop:true });
+
+  // Neural net rotation
+  anime({ targets:'#neuralNet', rotate:[-5,5], duration:6000, easing:'easeInOutSine', direction:'alternate', loop:true });
+
+  // Equaliser bars
+  anime({ targets:'.eq-bar', height:function(){return anime.random(4,28)+'px';}, duration:400, easing:'easeInOutQuad', delay:anime.stagger(50), loop:true, direction:'alternate' });
+
+  // Data snippets float in/out
+  anime({ targets:'.data-snippet', opacity:[{value:0.7,duration:1500},{value:0,duration:1500}],
+    translateY:function(){return [anime.random(-5,5),anime.random(-12,12)];},
+    delay:anime.stagger(800,{start:2000}), loop:true, easing:'easeInOutSine' });
+
+  // Connection line dash
+  let dashAnimL, dashAnimR;
+  function dashForward(){
+    if(dashAnimL) dashAnimL.pause();
+    if(dashAnimR) dashAnimR.pause();
+    dashAnimL = anime({ targets:'#pathLeft', strokeDashoffset:[anime.setDashoffset,0], duration:3000, easing:'linear', loop:true });
+    dashAnimR = anime({ targets:'#pathRight', strokeDashoffset:[anime.setDashoffset,0], duration:3000, easing:'linear', loop:true });
+  }
+  function dashReverse(){
+    if(dashAnimL) dashAnimL.pause();
+    if(dashAnimR) dashAnimR.pause();
+    dashAnimL = anime({ targets:'#pathLeft', strokeDashoffset:[0,anime.setDashoffset], duration:3000, easing:'linear', loop:true });
+    dashAnimR = anime({ targets:'#pathRight', strokeDashoffset:[0,anime.setDashoffset], duration:3000, easing:'linear', loop:true });
+  }
+  dashForward();
+
+  // Background drift
+  anime({ targets:'.bg-grid', translateX:[-8,8], translateY:[-4,4], duration:18000, easing:'easeInOutSine', direction:'alternate', loop:true });
+
+  // Panel breathe
+  anime({ targets:'.panel', boxShadow:['0 0 25px rgba(124,77,255,0.04)','0 0 45px rgba(124,77,255,0.12)'], duration:3500, easing:'easeInOutSine', direction:'alternate', loop:true });
+
+  // Idle figure bob
+  anime({ targets:'#studentSvg', translateY:[-2,2], duration:4500, easing:'easeInOutSine', direction:'alternate', loop:true });
+  anime({ targets:'#agentSvg', translateY:[2,-2], duration:4000, easing:'easeInOutSine', direction:'alternate', loop:true });
+
+  // ── PARTICLE HELPERS ──
+  const stage = document.getElementById('stage');
+  let activeParticleAnims = [];
+
+  function clearParticles(){
+    activeParticleAnims.forEach(a=>a.pause());
+    activeParticleAnims = [];
+    document.querySelectorAll('.particle').forEach(p=>{p.style.opacity='0';});
+  }
+
+  function flowLeftToRight(){
+    clearParticles();
+    const sr = stage.getBoundingClientRect();
+    // Student → Cloud
+    for(let i=0;i<10;i++){
+      const p = document.getElementById('pL'+i);
+      const a = anime({
+        targets:p,
+        left:{value:[sr.width*0.20, sr.width*0.47], duration:1800},
+        top:{value:[sr.height*0.44+Math.random()*30-15, sr.height*0.47+Math.random()*16-8], duration:1800},
+        opacity:[{value:0.9,duration:150},{value:0,duration:300,delay:1350}],
+        easing:'easeInOutQuad', delay:i*180, loop:true
+      });
+      activeParticleAnims.push(a);
+    }
+    // Cloud → Agent
+    for(let i=0;i<10;i++){
+      const p = document.getElementById('pR'+i);
+      const a = anime({
+        targets:p,
+        left:{value:[sr.width*0.53, sr.width*0.80], duration:1800},
+        top:{value:[sr.height*0.47+Math.random()*16-8, sr.height*0.44+Math.random()*30-15], duration:1800},
+        opacity:[{value:0.9,duration:150},{value:0,duration:300,delay:1350}],
+        easing:'easeInOutQuad', delay:i*180+300, loop:true
+      });
+      activeParticleAnims.push(a);
+    }
+  }
+
+  function flowRightToLeft(){
+    clearParticles();
+    const sr = stage.getBoundingClientRect();
+    // Agent → Cloud
+    for(let i=0;i<10;i++){
+      const p = document.getElementById('pRR'+i);
+      const a = anime({
+        targets:p,
+        left:{value:[sr.width*0.80, sr.width*0.53], duration:1800},
+        top:{value:[sr.height*0.44+Math.random()*30-15, sr.height*0.47+Math.random()*16-8], duration:1800},
+        opacity:[{value:0.9,duration:150},{value:0,duration:300,delay:1350}],
+        easing:'easeInOutQuad', delay:i*180, loop:true
+      });
+      activeParticleAnims.push(a);
+    }
+    // Cloud → Student
+    for(let i=0;i<10;i++){
+      const p = document.getElementById('pRL'+i);
+      const a = anime({
+        targets:p,
+        left:{value:[sr.width*0.47, sr.width*0.20], duration:1800},
+        top:{value:[sr.height*0.47+Math.random()*16-8, sr.height*0.44+Math.random()*30-15], duration:1800},
+        opacity:[{value:0.9,duration:150},{value:0,duration:300,delay:1350}],
+        easing:'easeInOutQuad', delay:i*180+300, loop:true
+      });
+      activeParticleAnims.push(a);
+    }
+  }
+
+  // ── SOUND WAVES ──
+  let studentWaveAnim, agentWaveAnim;
+  function startStudentWaves(){
+    studentWaveAnim = anime({ targets:['#wave1','#wave2','#wave3'], opacity:{value:[0.7,0],duration:1400},
+      scale:[0.8,1.5], easing:'easeOutSine', delay:anime.stagger(180), loop:true });
+  }
+  function stopStudentWaves(){ if(studentWaveAnim){studentWaveAnim.pause(); anime({targets:['#wave1','#wave2','#wave3'],opacity:0,duration:300});} }
+  function startAgentWaves(){
+    agentWaveAnim = anime({ targets:['#waveA1','#waveA2','#waveA3'], opacity:{value:[0.7,0],duration:1400},
+      scale:[0.8,1.5], easing:'easeOutSine', delay:anime.stagger(180), loop:true });
+  }
+  function stopAgentWaves(){ if(agentWaveAnim){agentWaveAnim.pause(); anime({targets:['#waveA1','#waveA2','#waveA3'],opacity:0,duration:300});} }
+
+  // ── PROCESS ICONS SEQUENTIAL LIGHT-UP ──
+  const pIcons = ['piSTT','piNLP','piLLM','piTTS'];
+  function lightIconsLR(cb){
+    let idx=0;
+    const iv = setInterval(()=>{
+      pIcons.forEach(id=>document.getElementById(id).classList.remove('active'));
+      if(idx<pIcons.length){ document.getElementById(pIcons[idx]).classList.add('active'); idx++; }
+      else{ clearInterval(iv); pIcons.forEach(id=>document.getElementById(id).classList.remove('active')); if(cb)cb(); }
+    },350);
+  }
+  function lightIconsRL(cb){
+    let idx=pIcons.length-1;
+    const iv = setInterval(()=>{
+      pIcons.forEach(id=>document.getElementById(id).classList.remove('active'));
+      if(idx>=0){ document.getElementById(pIcons[idx]).classList.add('active'); idx--; }
+      else{ clearInterval(iv); pIcons.forEach(id=>document.getElementById(id).classList.remove('active')); if(cb)cb(); }
+    },350);
+  }
+
+  // ── PROCESSING DOT ──
+  let procAnim;
+  function showProcDot(){
+    procAnim = anime({ targets:'#procDot', opacity:[0,1,0], scale:[0.8,1.2,0.8], duration:1200, easing:'easeInOutSine', loop:true });
+  }
+  function hideProcDot(){ if(procAnim)procAnim.pause(); anime({targets:'#procDot',opacity:0,duration:200}); }
+
+  // ── TYPEWRITER ──
+  function typeText(elId, cursorId, text){
+    return new Promise(resolve=>{
+      const el = document.getElementById(elId);
+      const cur = document.getElementById(cursorId);
+      el.textContent = '';
+      cur.style.opacity = '1';
+      anime({ targets:cur, opacity:[1,0], duration:500, easing:'steps(2)', loop:true });
+      let i=0;
+      const iv = setInterval(()=>{
+        if(i<text.length){ el.textContent += text[i]; i++; }
+        else{ clearInterval(iv); anime.remove(cur); cur.style.opacity='0'; resolve(); }
+      },45);
+    });
+  }
+
+  function showBubble(id){
+    return anime({ targets:id, opacity:[0,1], scale:[0.92,1], translateY:[6,0], duration:450, easing:'easeOutBack' }).finished;
+  }
+  function hideBubble(id){
+    return anime({ targets:id, opacity:[1,0], duration:400, easing:'easeInQuad' }).finished;
+  }
+
+  // ── TURN INDICATOR ──
+  function setTurn(idx){
+    for(let i=0;i<4;i++){
+      const d = document.getElementById('td'+i);
+      d.classList.toggle('active',i===idx);
+    }
+  }
+
+  // ── CONVERSATION LOOP ──
+  const conversation = [
+    { speaker:'student', text:"Hi, I need help with my enrollment and payment options..." },
+    { speaker:'agent', text:"Of course! Let me pull up your details... I can see you're enrolled on the BSc Computer Science programme." },
+    { speaker:'student', text:"That's right. Can I switch to the part-time route?" },
+    { speaker:'agent', text:"Absolutely! I've found two available part-time pathways. Shall I send the details to your email?" }
+  ];
+
+  async function runConversation(){
+    for(let t=0;t<conversation.length;t++){
+      const turn = conversation[t];
+      setTurn(t);
+
+      if(turn.speaker === 'student'){
+        // Student speaks
+        startStudentWaves();
+        stopAgentWaves();
+        flowLeftToRight();
+        dashForward();
+        await showBubble('#bubbleStudent');
+        showProcDot();
+        lightIconsLR();
+        await typeText('textStudent','cursorStudent',turn.text);
+        hideProcDot();
+        await new Promise(r=>setTimeout(r,1800));
+        stopStudentWaves();
+      } else {
+        // Agent replies
+        stopStudentWaves();
+        startAgentWaves();
+        flowRightToLeft();
+        dashReverse();
+        await showBubble('#bubbleAgent');
+        showProcDot();
+        lightIconsRL();
+        await typeText('textAgent','cursorAgent',turn.text);
+        hideProcDot();
+        await new Promise(r=>setTimeout(r,1800));
+        stopAgentWaves();
+      }
+
+      // Brief pause, then hide bubble for next turn
+      await new Promise(r=>setTimeout(r,600));
+      if(turn.speaker === 'student') await hideBubble('#bubbleStudent');
+      else await hideBubble('#bubbleAgent');
+      document.getElementById('textStudent').textContent = '';
+      document.getElementById('textAgent').textContent = '';
+      await new Promise(r=>setTimeout(r,400));
+    }
+
+    // Pause and restart
+    clearParticles();
+    setTurn(-1);
+    await new Promise(r=>setTimeout(r,2000));
+    runConversation();
+  }
+
+  // Start conversation after intro
+  setTimeout(runConversation, 3500);
+
+});
+</script>
+<script src="https://github.com/Cognigy/click-to-call-widget/releases/latest/download/webRTCWidget.js"></script>
+<script>
+	addEventListener("load", (event) => {if (window.initWebRTCWidget) {window.initWebRTCWidget("https://endpoint-trial.cognigy.ai/7efe4615fa3af93aa0652dd28e2ff35ac3b83e21e2f45c93b44ec4f19ee65e5f")}});
+</script>
+</body>
+</html>

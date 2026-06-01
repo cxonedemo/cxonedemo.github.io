@@ -11,22 +11,32 @@ html<!DOCTYPE html>
     td:last-child { border-bottom: none; }
     td:first-child { color: #666; font-weight: bold; width: 45%; }
     .badge-yes { background: #d4edda; color: #155724; padding: 3px 10px; border-radius: 12px; font-weight: bold; }
+    .badge-no  { background: #f8d7da; color: #721c24; padding: 3px 10px; border-radius: 12px; font-weight: bold; }
   </style>
 </head>
 <body>
   <div class="card">
     <h2>&#128100; Caller Information</h2>
     <table>
-      <tr><td>Customer Name</td><td>Sarah Mitchell</td></tr>
-      <tr><td>Account Number</td><td>ACC-00483921</td></tr>
-      <tr><td>Authenticated</td><td><span class="badge-yes">&#10003; Yes</span></td></tr>
-      <tr><td>Auth Method</td><td>Voice Biometrics</td></tr>
+      <tr><td>Customer Name</td><td id="name"></td></tr>
+      <tr><td>Account Number</td><td id="account"></td></tr>
+      <tr><td>Authenticated</td><td id="authenticated"></td></tr>
     </table>
   </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    document.getElementById('name').textContent = params.get('name') || 'Unknown';
+    document.getElementById('account').textContent = params.get('account') || 'Unknown';
+
+    const auth = params.get('authenticated') || 'No';
+    const authEl = document.getElementById('authenticated');
+    if (auth.toLowerCase() === 'yes') {
+      authEl.innerHTML = '<span class="badge-yes">&#10003; Yes</span>';
+    } else {
+      authEl.innerHTML = '<span class="badge-no">&#10007; No</span>';
+    }
+  </script>
 </body>
 </html>
-2. In the PAGE wizard — increase the iframe Height
-In the Embedded Frame (URL) component properties, set:
-PropertyValueWidth100%Height220
-
-Rule of thumb: count your content height and add ~40px buffer. For 4 table rows + heading + padding, 220px fits perfectly with no scrollbar. If you add more rows later, bump it up by ~35px per row.

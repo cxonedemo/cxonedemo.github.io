@@ -1,12 +1,14 @@
-<!DOCTYPE html>
+html<!DOCTYPE html>
 <html>
 <head>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
-    .card { background: white; border-radius: 8px; padding: 20px; max-width: 400px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    h2 { color: #0066cc; margin-top: 0; font-size: 16px; }
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 12px; background: #f5f5f5; }
+    .card { background: white; border-radius: 8px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    h2 { color: #0066cc; margin-top: 0; font-size: 15px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    td { padding: 10px 8px; border-bottom: 1px solid #eee; }
+    td { padding: 9px 8px; border-bottom: 1px solid #eee; }
+    td:last-child { border-bottom: none; }
     td:first-child { color: #666; font-weight: bold; width: 45%; }
     .badge-yes { background: #d4edda; color: #155724; padding: 3px 10px; border-radius: 12px; font-weight: bold; }
   </style>
@@ -23,3 +25,8 @@
   </div>
 </body>
 </html>
+2. In the PAGE wizard — increase the iframe Height
+In the Embedded Frame (URL) component properties, set:
+PropertyValueWidth100%Height220
+
+Rule of thumb: count your content height and add ~40px buffer. For 4 table rows + heading + padding, 220px fits perfectly with no scrollbar. If you add more rows later, bump it up by ~35px per row.

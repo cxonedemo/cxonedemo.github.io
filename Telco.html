@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YourTelco — Connecting the UK, Simply</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #06499b;
+      --dark-blue: #04346f;
+      --orange: #ff5a00;
+      --soft-orange: #fff1e8;
+      --bg: #f4f7fb;
+      --card-white: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --success: #16a34a;
+      --charcoal: #04346f;
+      --warm-white: #f4f7fb;
+      --white: #ffffff;
+      --gradient: linear-gradient(135deg, #06499b 0%, #04346f 50%, #ff5a00 100%);
+      --nice-blue: #06499b;
+      --teal: #ff5a00;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      font-weight: 300;
+      color: var(--charcoal);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 0 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 72px;
+      overflow: visible;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 0; }
+    .nav-logo-icon {
+      width: 40px; height: 40px;
+      background: var(--blue);
+      border-radius: 30%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-text { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.03em; color: var(--charcoal); }
+    .nav-logo-text span { color: var(--orange); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--charcoal); font-weight: 400; font-size: 0.938rem; opacity: 0.8; transition: opacity 0.2s; }
+    .nav-links a:hover { opacity: 1; }
+    .nav-cta {
+      background: var(--orange); color: #fff;
+      border: none; border-radius: 9999px;
+      padding: 10px 24px; font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      font-weight: 500; font-size: 0.938rem; cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.88; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #06499b 0%, #04346f 60%, #ff5a00 100%);
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 120px 80px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -200px; right: -200px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: -100px; left: 20%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(255,90,0,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 9999px; padding: 6px 16px 6px 8px;
+      color: #fff; font-size: 0.813rem; font-weight: 500;
+      margin-bottom: 32px; width: fit-content;
+    }
+    .hero-badge-dot {
+      width: 8px; height: 8px; background: var(--orange); border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .hero h1 {
+      font-size: clamp(3rem, 6vw, 4.75rem);
+      font-weight: 600; color: #fff;
+      letter-spacing: -0.03em; line-height: 1.05;
+      max-width: 800px; margin-bottom: 28px;
+    }
+    .hero-sub {
+      font-size: 1.25rem; font-weight: 300; color: rgba(255,255,255,0.85);
+      max-width: 580px; line-height: 1.55; margin-bottom: 48px;
+    }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-white {
+      background: #fff; color: var(--charcoal);
+      border: none; border-radius: 9999px;
+      padding: 14px 32px; font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      font-weight: 600; font-size: 1rem; cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
+    .btn-ghost {
+      background: transparent; color: #fff;
+      border: 2px solid rgba(255,255,255,0.6);
+      border-radius: 9999px; padding: 14px 32px;
+      font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      font-weight: 500; font-size: 1rem; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+    /* Hero chat bubbles floating */
+    .hero-illustration {
+      position: absolute; right: 60px; top: 50%;
+      transform: translateY(-50%);
+      width: 420px; height: 420px;
+      pointer-events: none;
+    }
+    .hero-illustration svg { width: 100%; height: 100%; }
+
+    /* ── STATS ── */
+    .stats {
+      background: var(--dark-blue);
+      padding: 60px 80px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;
+    }
+    .stat { text-align: center; }
+    .stat-value { font-size: 2.5rem; font-weight: 600; color: var(--orange); letter-spacing: -0.03em; }
+    .stat-label { font-size: 0.938rem; color: rgba(255,255,255,0.6); margin-top: 6px; font-weight: 300; }
+
+    /* ── SECTION ── */
+    section { padding: 96px 80px; }
+    .section-label {
+      font-size: 0.813rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--blue);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 1.1;
+      color: var(--charcoal); max-width: 680px; margin-bottom: 20px;
+    }
+    .section-body {
+      font-size: 1.1rem; font-weight: 300; color: rgba(33,33,43,0.72);
+      max-width: 580px; line-height: 1.55;
+    }
+
+    /* ── CHALLENGES ── */
+    .challenges { background: var(--bg); }
+    .challenges-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 32px; margin-top: 56px;
+    }
+    .challenge-card {
+      background: #fff; border-radius: 32px;
+      padding: 36px; border: 1px solid rgba(0,0,0,0.06);
+    }
+    .card-icon {
+      width: 52px; height: 52px; border-radius: 30%;
+      background: var(--warm-white);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px; font-size: 1.5rem;
+    }
+    .challenge-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .challenge-card p { font-size: 0.938rem; font-weight: 300; line-height: 1.55; color: rgba(33,33,43,0.7); }
+
+    /* ── SOLUTIONS ── */
+    .solutions-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 28px; margin-top: 56px;
+    }
+    .solution-card {
+      background: var(--dark-blue); border-radius: 32px;
+      padding: 36px; position: relative; overflow: hidden;
+    }
+    .solution-card::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 150px; height: 150px;
+      background: radial-gradient(circle, rgba(255,90,0,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .solution-card .card-icon { background: rgba(255,255,255,0.08); }
+    .solution-card h3 { color: #fff; font-size: 1.125rem; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .solution-card p { color: rgba(255,255,255,0.6); font-size: 0.938rem; font-weight: 300; line-height: 1.55; }
+    .solution-highlight {
+      margin-top: 20px; padding: 12px 18px;
+      background: rgba(6,73,155,0.08); border-radius: 12px;
+      color: var(--blue); font-size: 0.875rem; font-weight: 500;
+    }
+
+    /* ── TESTIMONIAL ── */
+    .testimonial {
+      background: var(--gradient);
+      text-align: center;
+    }
+    .testimonial-quote {
+      font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 300;
+      color: #fff; max-width: 820px; margin: 0 auto 36px;
+      letter-spacing: -0.02em; line-height: 1.3;
+    }
+    .testimonial-quote strong { font-weight: 600; }
+    .testimonial-author {
+      display: inline-flex; align-items: center; gap: 16px;
+      background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 9999px; padding: 10px 24px 10px 10px;
+    }
+    .author-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem;
+    }
+    .author-name { color: #fff; font-weight: 600; font-size: 0.938rem; }
+    .author-role { color: rgba(255,255,255,0.7); font-size: 0.813rem; font-weight: 300; }
+
+    /* ── CX JOURNEY ── */
+    .journey { background: #fff; }
+    .journey-steps {
+      display: flex; gap: 0; margin-top: 56px;
+      position: relative;
+    }
+    .journey-steps::before {
+      content: '';
+      position: absolute; top: 28px; left: 28px; right: 28px; height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--orange));
+    }
+    .journey-step { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+    .step-dot {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #06499b, #ff5a00);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; margin-bottom: 20px; position: relative; z-index: 1;
+    }
+    .journey-step h4 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+    .journey-step p { font-size: 0.875rem; font-weight: 300; color: rgba(33,33,43,0.65); line-height: 1.4; padding: 0 12px; }
+
+    /* ── NICE PARTNERSHIP ── */
+    .partnership {
+      background: var(--dark-blue); padding: 80px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .partnership h2 {
+      font-size: clamp(2rem, 3.5vw, 2.75rem); font-weight: 600;
+      color: #fff; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 20px;
+    }
+    .partnership p { color: rgba(255,255,255,0.65); font-size: 1.05rem; font-weight: 300; line-height: 1.6; margin-bottom: 36px; }
+    .partnership-benefits { display: flex; flex-direction: column; gap: 16px; }
+    .benefit { display: flex; align-items: flex-start; gap: 14px; }
+    .benefit-check {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(255,90,0,0.15); color: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.875rem; flex-shrink: 0; margin-top: 2px;
+    }
+    .benefit-text { color: rgba(255,255,255,0.8); font-size: 0.975rem; font-weight: 300; line-height: 1.5; }
+    .partnership-visual {
+      background: linear-gradient(135deg, rgba(6,73,155,0.12), rgba(255,90,0,0.12));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 40px; padding: 48px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .metric-row { display: flex; justify-content: space-between; align-items: center; }
+    .metric-label { color: rgba(255,255,255,0.55); font-size: 0.875rem; font-weight: 300; }
+    .metric-bar-wrap { flex: 1; margin: 0 20px; background: rgba(255,255,255,0.08); border-radius: 9999px; height: 8px; overflow: hidden; }
+    .metric-bar { height: 100%; border-radius: 9999px; background: var(--gradient); }
+    .metric-val { color: #fff; font-weight: 600; font-size: 0.938rem; width: 40px; text-align: right; }
+
+    /* ── NICE LOGO LOCKUP in partnership ── */
+    .nice-lockup {
+      display: flex; align-items: center; gap: 20px;
+      padding: 24px 32px; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
+      margin-bottom: 24px;
+    }
+    .nice-lockup-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.2); }
+    .partner-label { color: rgba(255,255,255,0.45); font-size: 0.75rem; font-weight: 300; letter-spacing: 0.06em; }
+
+    /* ── CTA SECTION ── */
+    .cta-section {
+      padding: 96px 80px; text-align: center;
+      background: var(--warm-white);
+    }
+    .cta-section h2 {
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 600;
+      letter-spacing: -0.03em; color: var(--charcoal);
+      max-width: 700px; margin: 0 auto 20px; line-height: 1.1;
+    }
+    .cta-section p {
+      font-size: 1.1rem; font-weight: 300; color: rgba(33,33,43,0.65);
+      max-width: 520px; margin: 0 auto 40px; line-height: 1.55;
+    }
+    .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--orange); color: #fff;
+      border: none; border-radius: 9999px;
+      padding: 14px 32px; font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      font-weight: 500; font-size: 1rem; cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-outline {
+      background: transparent; color: var(--charcoal);
+      border: 2px solid rgba(33,33,43,0.25);
+      border-radius: 9999px; padding: 14px 32px;
+      font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      font-weight: 500; font-size: 1rem; cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--charcoal); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark-blue); padding: 60px 80px 40px;
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px; padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-brand p { color: rgba(255,255,255,0.5); font-size: 0.875rem; font-weight: 300; line-height: 1.6; margin-top: 16px; max-width: 280px; }
+    .footer-col h5 { color: rgba(255,255,255,0.4); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-col ul a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.875rem; font-weight: 300; transition: color 0.2s; }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 32px;
+    }
+    .footer-bottom p { color: rgba(255,255,255,0.35); font-size: 0.813rem; font-weight: 300; }
+
+    /* ── NiCE partner badge ── */
+    .nice-partner-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(6,73,155,0.08); border: 1px solid rgba(6,73,155,0.2);
+      border-radius: 9999px; padding: 8px 20px 8px 10px;
+      margin-bottom: 32px;
+    }
+    .nice-partner-badge span { color: var(--blue); font-size: 0.813rem; font-weight: 500; }
+
+    @media (max-width: 1100px) {
+      .hero-illustration { display: none; }
+      .challenges-grid, .solutions-grid, .partnership { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 700px) {
+      nav { padding: 0 24px; }
+      section, .hero, .stats, .partnership, .cta-section, footer { padding-left: 24px; padding-right: 24px; }
+      .nav-links { display: none; }
+      .journey-steps { flex-direction: column; align-items: flex-start; }
+      .journey-steps::before { display: none; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="https://i.ibb.co/Vk4BDXG/29650b49-b71f-43c5-9339-f20ec2183dd6.png" alt="YourTelco" style="height:116px; width:auto; object-fit:contain; mix-blend-mode:multiply; display:block; position:relative; z-index:101;"/>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#solutions">Solutions</a></li>
+    <li><a href="#business">Business</a></li>
+    <li><a href="#coverage">Coverage</a></li>
+    <li><a href="#about">About us</a></li>
+  </ul>
+  <button class="nav-cta">Get a quote</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    UK's most trusted telecoms partner
+  </div>
+  <h1>Connectivity that keeps your business moving</h1>
+  <p class="hero-sub">From broadband to cloud telephony, YourTelco gives UK businesses the infrastructure they need — and the support that actually picks up the phone.</p>
+  <div class="hero-actions">
+    <button class="btn-white">Explore our plans</button>
+    <button class="btn-ghost">Talk to an expert</button>
+  </div>
+
+  <!-- Hero illustration -->
+  <div class="hero-illustration">
+    <svg viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="210" cy="210" r="190" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <circle cx="210" cy="210" r="140" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <circle cx="210" cy="210" r="90" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+      <line x1="210" y1="210" x2="210" y2="72" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <line x1="210" y1="210" x2="330" y2="140" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <line x1="210" y1="210" x2="350" y2="265" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <line x1="210" y1="210" x2="260" y2="360" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <line x1="210" y1="210" x2="90" y2="340" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <line x1="210" y1="210" x2="65" y2="250" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <line x1="210" y1="210" x2="80" y2="130" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <circle cx="210" cy="72" r="14" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+      <circle cx="330" cy="140" r="14" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+      <circle cx="350" cy="265" r="14" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+      <circle cx="260" cy="360" r="14" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+      <circle cx="90" cy="340" r="14" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+      <circle cx="65" cy="250" r="14" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+      <circle cx="80" cy="130" r="14" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+      <circle cx="210" cy="72" r="5" fill="white" opacity="0.7"/>
+      <circle cx="330" cy="140" r="5" fill="white" opacity="0.7"/>
+      <circle cx="350" cy="265" r="5" fill="white" opacity="0.7"/>
+      <circle cx="260" cy="360" r="5" fill="white" opacity="0.7"/>
+      <circle cx="90" cy="340" r="5" fill="white" opacity="0.7"/>
+      <circle cx="65" cy="250" r="5" fill="white" opacity="0.7"/>
+      <circle cx="80" cy="130" r="5" fill="white" opacity="0.7"/>
+      <circle cx="210" cy="210" r="52" fill="rgba(255,255,255,0.08)"/>
+      <circle cx="210" cy="210" r="38" fill="rgba(255,255,255,0.12)"/>
+      <circle cx="210" cy="222" r="9" fill="white"/>
+      <path d="M191,207 C191,196 200,188 210,188 C220,188 229,196 229,207" stroke="white" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <path d="M176,196 C176,178 191,164 210,164 C229,164 244,178 244,196" stroke="rgba(255,200,150,0.6)" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <circle cx="210" cy="210" r="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none">
+        <animate attributeName="r" values="52;80;52" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-value">2.4M</div>
+    <div class="stat-label">Business customers across the UK</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">99.98%</div>
+    <div class="stat-label">Network uptime guarantee</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">24/7</div>
+    <div class="stat-label">UK-based support, every day</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">&lt;90s</div>
+    <div class="stat-label">Average answer time, no bots</div>
+  </div>
+</div>
+
+<!-- CHALLENGES -->
+<section class="challenges" id="solutions">
+  <div class="section-label">The problem we solve</div>
+  <h2 class="section-title">Business telecoms shouldn't be this hard</h2>
+  <p class="section-body">We hear it every day. Outages with no updates. Support teams that can't see your history. Bills that don't add up. YourTelco was built to fix exactly that.</p>
+  <div class="challenges-grid">
+    <div class="challenge-card">
+      <div class="card-icon">📞</div>
+      <h3>Calls that never reach anyone</h3>
+      <p>Long hold times and disjointed handoffs cost UK businesses an average of 4.3 hours a week in lost productivity. Your customers deserve better — so do you.</p>
+    </div>
+    <div class="challenge-card">
+      <div class="card-icon">📡</div>
+      <h3>Outages with no visibility</h3>
+      <p>When connectivity drops, you need answers fast. Most providers leave you guessing. We proactively notify you, give live status updates, and dispatch engineers — before you ask.</p>
+    </div>
+    <div class="challenge-card">
+      <div class="card-icon">🔁</div>
+      <h3>Siloed systems, repeated conversations</h3>
+      <p>Your team shouldn't have to explain the same issue three times. Our platform connects voice, data, and billing into one unified view — for us and for you.</p>
+    </div>
+    <div class="challenge-card">
+      <div class="card-icon">📊</div>
+      <h3>Complexity at scale</h3>
+      <p>Growing businesses need telecoms that grow with them. ConnectGroup's elastic plans let you add lines, locations, and capacity without the contract headache.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTIONS -->
+<section id="business">
+  <div class="section-label">What we offer</div>
+  <h2 class="section-title">Everything your business needs to stay connected</h2>
+  <p class="section-body">One provider. One bill. One support team that knows your account inside out.</p>
+  <div class="solutions-grid">
+    <div class="solution-card">
+      <div class="card-icon" style="font-size:1.4rem">🌐</div>
+      <h3>Leased line & fibre broadband</h3>
+      <p>Dedicated symmetric connections from 100Mbps to 10Gbps. Built for businesses where downtime isn't an option.</p>
+      <div class="solution-highlight">99.98% SLA uptime</div>
+    </div>
+    <div class="solution-card">
+      <div class="card-icon" style="font-size:1.4rem">☁️</div>
+      <h3>Cloud telephony (UCaaS)</h3>
+      <p>Replace your ageing PBX with a fully managed cloud phone system. Scales instantly, works anywhere.</p>
+      <div class="solution-highlight">Set up in 24 hours</div>
+    </div>
+    <div class="solution-card">
+      <div class="card-icon" style="font-size:1.4rem">📱</div>
+      <h3>Business mobile</h3>
+      <p>Shared data pools, device management, and SIM-only plans across all major UK networks — managed from one portal.</p>
+      <div class="solution-highlight">From £6.50/user/month</div>
+    </div>
+    <div class="solution-card">
+      <div class="card-icon" style="font-size:1.4rem">🔐</div>
+      <h3>SD-WAN & security</h3>
+      <p>Intelligent network routing with built-in threat protection. Keep distributed teams and remote workers safe.</p>
+      <div class="solution-highlight">Zero-trust ready</div>
+    </div>
+    <div class="solution-card">
+      <div class="card-icon" style="font-size:1.4rem">🎧</div>
+      <h3>Managed contact centre</h3>
+      <p>Smart routing, real-time analytics, and AI-assisted agents — powered by NiCE CXone. Your customers always reach the right person.</p>
+      <div class="solution-highlight">Powered by NiCE CXone</div>
+    </div>
+    <div class="solution-card">
+      <div class="card-icon" style="font-size:1.4rem">⚡</div>
+      <h3>Pro support & monitoring</h3>
+      <p>Proactive 24/7 monitoring with a dedicated account team. We see issues before your customers do.</p>
+      <div class="solution-highlight">Response in &lt;15 minutes</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial">
+  <div class="testimonial-quote">
+    "We switched to YourTelco and within 90 days our <strong>call resolution rate jumped by 38%.</strong> The team actually knows our business — not just our account number."
+  </div>
+  <div class="testimonial-author">
+    <div class="author-avatar">👤</div>
+    <div>
+      <div class="author-name">Sarah Whitmore</div>
+      <div class="author-role">Head of operations, Meridian Logistics</div>
+    </div>
+  </div>
+</section>
+
+<!-- CX JOURNEY -->
+<section class="journey">
+  <div class="section-label">Customer experience</div>
+  <h2 class="section-title">Every interaction, handled brilliantly</h2>
+  <p class="section-body">From the first call to the final resolution — your customers feel the difference when everything just works.</p>
+  <div class="journey-steps">
+    <div class="journey-step">
+      <div class="step-dot">📲</div>
+      <h4>Customer reaches out</h4>
+      <p>Via voice, chat, email, or social — on any channel they choose.</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-dot">🧠</div>
+      <h4>Intelligent routing</h4>
+      <p>Intent is identified and the right agent receives full context instantly.</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-dot">🤝</div>
+      <h4>Empowered agent</h4>
+      <p>AI surfaces answers and next steps in real time — no more screen switching.</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-dot">✅</div>
+      <h4>First contact resolution</h4>
+      <p>Issue resolved. Customer satisfied. Automatically logged and followed up.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NiCE PARTNERSHIP -->
+<div class="partnership">
+  <div>
+    <div class="nice-partner-badge">
+      <!-- NiCE logo white+blue dot inline SVG, scaled small -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 864.3 400.99" height="22" role="img" aria-label="NiCE">
+        <style>.nb{fill:#3694fd;}.nw{fill:#fff;}</style>
+        <path class="nb" d="M333.62,62.55c-18.86-1.19-34.4,14.35-33.21,33.21.98,15.55,13.6,28.17,29.15,29.15,18.86,1.19,34.4-14.35,33.21-33.21-.98-15.55-13.6-28.17-29.15-29.15Z"/>
+        <path class="nw" d="M265.33,82.11h-50.27c-1.66,0-3,1.34-3,3v147.41c0,1.02-1.35,1.39-1.86.5L123.2,83.61c-.54-.92-1.52-1.49-2.59-1.49h-55.12c-1.66,0-3,1.34-3,3v244.74c0,1.66,1.34,3,3,3h50.27c1.66,0,3-1.34,3-3v-146.82c0-1.02,1.35-1.39,1.86-.5l87,148.84c.54.92,1.52,1.49,2.59,1.49h55.13c1.66,0,3-1.34,3-3V85.11c0-1.66-1.34-3-3-3Z"/>
+        <path class="nw" d="M353.85,141.37c-7.03,1.51-14.5,2.33-22.27,2.33s-15.24-.82-22.27-2.33c-1.87-.4-3.62,1.02-3.62,2.93v185.55c0,1.66,1.34,3,3,3h45.78c1.66,0,3-1.34,3-3v-185.55c0-1.91-1.76-3.33-3.62-2.93Z"/>
+        <path class="nw" d="M798.81,286.94h-104.66c-.55,0-1-.45-1-1v-54.5c0-.55.45-1,1-1h85.42c1.66,0,3-1.34,3-3v-39.91c0-1.66-1.34-3-3-3h-85.42c-.55,0-1-.45-1-1v-54.5c0-.55.45-1,1-1h104.66c1.66,0,3-1.34,3-3v-39.91c0-1.66-1.34-3-3-3h-158.92c-1.66,0-3,1.34-3,3v244.74c0,1.66,1.34,3,3,3h158.92c1.66,0,3-1.34,3-3v-39.91c0-1.66-1.34-3-3-3Z"/>
+        <path class="nw" d="M601.92,239.96h-53.14c-1.44,0-2.69,1.02-2.95,2.43-2.46,13.53-7.09,24.33-13.89,32.37-7.65,9.07-18.49,13.6-32.5,13.6-10.78,0-20.05-3.29-27.81-9.89-7.76-6.59-13.74-15.89-17.95-27.9-4.2-12.01-6.31-26.25-6.31-42.73,0-16.01,1.99-30.13,5.98-42.38,3.99-12.24,9.91-21.77,17.79-28.6,7.87-6.83,17.41-10.24,28.62-10.24,12.72,0,23.07,4.24,31.04,12.71,6.99,7.43,11.82,17.39,14.51,29.87.29,1.37,1.52,2.34,2.92,2.34h52.94c1.88,0,3.29-1.71,2.95-3.56-5.27-28.79-16.07-51.06-32.42-66.79-17.14-16.48-41.12-24.72-71.95-24.72-22.42,0-41.93,5.42-58.53,16.24-16.6,10.83-29.38,26.08-38.32,45.73-8.95,19.66-13.42,42.79-13.42,69.39s4.69,51.03,14.07,70.45c9.38,19.42,22.31,34.32,38.81,44.67,16.49,10.36,35.3,15.54,56.43,15.54,20.48,0,38.05-3.88,52.71-11.65,14.66-7.77,26.52-19.01,35.57-33.73,8.49-13.79,14.42-30.34,17.79-49.63.32-1.85-1.08-3.54-2.95-3.54Z"/>
+      </svg>
+      <span>Authorised CXone partner</span>
+    </div>
+    <h2>Your contact centre, powered by the world's best CX platform</h2>
+    <p>YourTelco's managed contact centre runs on NiCE CXone Mpower — the platform trusted by 85% of the Fortune 100. We bring the technology. You deliver the experience.</p>
+    <div class="partnership-benefits">
+      <div class="benefit">
+        <div class="benefit-check">✓</div>
+        <div class="benefit-text">Omnichannel — voice, digital, and messaging in one unified desktop</div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-check">✓</div>
+        <div class="benefit-text">AI-powered agent assist and automated quality scoring</div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-check">✓</div>
+        <div class="benefit-text">Real-time workforce management across every shift and site</div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-check">✓</div>
+        <div class="benefit-text">Fully managed implementation and ongoing optimisation by our team</div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="partnership-visual">
+      <div style="color:rgba(255,255,255,0.4);font-size:0.75rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Performance improvements after NiCE CXone</div>
+      <div class="metric-row">
+        <div class="metric-label">First contact resolution</div>
+        <div class="metric-bar-wrap"><div class="metric-bar" style="width:82%"></div></div>
+        <div class="metric-val">+38%</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">Agent handling time</div>
+        <div class="metric-bar-wrap"><div class="metric-bar" style="width:65%"></div></div>
+        <div class="metric-val">−24%</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">Customer CSAT score</div>
+        <div class="metric-bar-wrap"><div class="metric-bar" style="width:91%"></div></div>
+        <div class="metric-val">4.7★</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">Abandoned calls</div>
+        <div class="metric-bar-wrap"><div class="metric-bar" style="width:55%;background:linear-gradient(90deg,#ff5a00,#ffaa00)"></div></div>
+        <div class="metric-val">−41%</div>
+      </div>
+      <div class="metric-row">
+        <div class="metric-label">Agent satisfaction</div>
+        <div class="metric-bar-wrap"><div class="metric-bar" style="width:78%"></div></div>
+        <div class="metric-val">+29%</div>
+      </div>
+      <div style="margin-top:24px;padding:20px;background:rgba(255,90,0,0.1);border-radius:16px;border:1px solid rgba(255,90,0,0.2);">
+        <div style="color:rgba(255,255,255,0.5);font-size:0.75rem;font-weight:300;margin-bottom:6px;">Average payback period</div>
+        <div style="color:#fff;font-size:1.75rem;font-weight:600;letter-spacing:-0.03em;">6.5 months</div>
+        <div style="color:rgba(255,255,255,0.45);font-size:0.813rem;font-weight:300;margin-top:4px;">Based on YourTelco customer data, 2024</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section" id="about">
+  <div class="section-label">Ready to connect?</div>
+  <h2>Let's build something NiCE together</h2>
+  <p>Join 2.4 million UK businesses who've made YourTelco their telecoms partner. Your first consultation is on us.</p>
+  <div class="cta-buttons">
+    <button class="btn-primary">Get a free consultation</button>
+    <button class="btn-outline">Download our brochure</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="nav-logo">
+        <img src="https://i.ibb.co/Vk4BDXG/29650b49-b71f-43c5-9339-f20ec2183dd6.png" alt="YourTelco" height="40" style="object-fit:contain;filter:brightness(0) invert(1);"/>
+      </div>
+      <p>UK-based business telecoms built around your success. Connectivity, cloud telephony, mobile, and CX — all in one place.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Solutions</h5>
+      <ul>
+        <li><a href="#">Leased line & fibre</a></li>
+        <li><a href="#">Cloud telephony</a></li>
+        <li><a href="#">Business mobile</a></li>
+        <li><a href="#">SD-WAN</a></li>
+        <li><a href="#">Contact centre</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About YourTelco</a></li>
+        <li><a href="#">Partners</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Network status</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Support</h5>
+      <ul>
+        <li><a href="#">Help centre</a></li>
+        <li><a href="#">Contact us</a></li>
+        <li><a href="#">Report a fault</a></li>
+        <li><a href="#">My account</a></li>
+        <li><a href="#">SLA documents</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 YourTelco Ltd. Registered in England & Wales. No. 09123456.</p>
+    <p style="display:flex;align-items:center;gap:8px;">
+      <!-- NiCE smile white mono -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 381.33 381.33" height="18" role="img" aria-label="NiCE smile">
+        <circle fill="rgba(255,255,255,0.3)" cx="93.73" cy="93.73" r="31.24"/>
+        <circle fill="rgba(255,255,255,0.3)" cx="193.35" cy="93.73" r="31.24"/>
+        <path fill="rgba(255,255,255,0.3)" d="M315.85,124.97h-45.79c-1.64,0-2.96,1.32-3,2.97-1.56,76.01-63.11,137.56-139.12,139.12-1.64.03-2.97,1.35-2.97,3v45.79c0,1.67,1.36,3.03,3.03,3,104.52-1.61,189.25-86.33,190.85-190.85.03-1.67-1.34-3.03-3-3.03Z"/>
+      </svg>
+      <span style="color:rgba(255,255,255,0.3);font-size:0.75rem;">CX powered by NiCE</span>
+    </p>
+  </div>
+</footer>
+
+
+<script src="https://github.com/Cognigy/click-to-call-widget/releases/latest/download/webRTCWidget.js"></script>
+<script>
+  addEventListener("load", (event) => {
+    if (window.initWebRTCWidget) {
+      window.initWebRTCWidget("https://endpoint-trial.cognigy.ai/7efe4615fa3af93aa0652dd28e2ff35ac3b83e21e2f45c93b44ec4f19ee65e5f");
+    }
+  });
+</script>
+
+</body>
+</html>

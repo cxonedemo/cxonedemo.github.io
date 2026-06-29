@@ -375,6 +375,17 @@
       .journey-steps::before { display: none; }
       .footer-top { grid-template-columns: 1fr; }
     }
+
+    /* ── WEBCHAT POSITION: bottom-left ── */
+    #webchat-root,
+    #cognigy-webchat-root,
+    .cognigy-webchat-root,
+    [class*="webchat-root"],
+    [id*="webchat"] {
+      left: 20px !important;
+      right: auto !important;
+      bottom: 20px !important;
+    }
   </style>
 </head>
 <body>
@@ -587,7 +598,6 @@
 <div class="partnership">
   <div>
     <div class="nice-partner-badge">
-      <!-- NiCE logo white+blue dot inline SVG, scaled small -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 864.3 400.99" height="22" role="img" aria-label="NiCE">
         <style>.nb{fill:#3694fd;}.nw{fill:#fff;}</style>
         <path class="nb" d="M333.62,62.55c-18.86-1.19-34.4,14.35-33.21,33.21.98,15.55,13.6,28.17,29.15,29.15,18.86,1.19,34.4-14.35,33.21-33.21-.98-15.55-13.6-28.17-29.15-29.15Z"/>
@@ -710,7 +720,6 @@
   <div class="footer-bottom">
     <p>© 2025 YourTelco Ltd. Registered in England & Wales. No. 09123456.</p>
     <p style="display:flex;align-items:center;gap:8px;">
-      <!-- NiCE smile white mono -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 381.33 381.33" height="18" role="img" aria-label="NiCE smile">
         <circle fill="rgba(255,255,255,0.3)" cx="93.73" cy="93.73" r="31.24"/>
         <circle fill="rgba(255,255,255,0.3)" cx="193.35" cy="93.73" r="31.24"/>
@@ -720,13 +729,38 @@
     </p>
   </div>
 </footer>
-  <script src="https://github.com/Cognigy/Webchat/releases/latest/download/webchat.js"></script>
-<script>
-	initWebchat(
-		"https://endpoint-trial.cognigy.ai/6b94b5eab0e4d4de0ef373d10145bb4636f90572228099802bba8a80d706856a"
-	);
-</script>
 
+<script src="https://github.com/Cognigy/Webchat/releases/latest/download/webchat.js"></script>
+<script>
+  initWebchat(
+    "https://endpoint-trial.cognigy.ai/6b94b5eab0e4d4de0ef373d10145bb4636f90572228099802bba8a80d706856a"
+  );
+
+  // Force webchat to bottom-left after it renders
+  function moveWebchatLeft() {
+    var selectors = [
+      '#webchat-root',
+      '#cognigy-webchat-root',
+      '.webchat-root',
+      '[class*="webchat-root"]',
+      '[id*="webchat-root"]'
+    ];
+    var found = false;
+    selectors.forEach(function(sel) {
+      var el = document.querySelector(sel);
+      if (el) {
+        el.style.setProperty('left', '20px', 'important');
+        el.style.setProperty('right', 'auto', 'important');
+        el.style.setProperty('bottom', '20px', 'important');
+        found = true;
+      }
+    });
+    if (!found) {
+      setTimeout(moveWebchatLeft, 300);
+    }
+  }
+  setTimeout(moveWebchatLeft, 500);
+</script>
 
 <script src="https://github.com/Cognigy/click-to-call-widget/releases/latest/download/webRTCWidget.js"></script>
 <script>

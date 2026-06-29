@@ -376,15 +376,32 @@
       .footer-top { grid-template-columns: 1fr; }
     }
 
-    /* ── WEBCHAT POSITION: bottom-left ── */
+    /* ── WEBCHAT POSITION: bottom-right ── */
     #webchat-root,
     #cognigy-webchat-root,
     .cognigy-webchat-root,
     [class*="webchat-root"],
-    [id*="webchat"] {
-      left: 20px !important;
-      right: auto !important;
+    [id*="webchat-root"] {
+      right: 20px !important;
+      left: auto !important;
       bottom: 20px !important;
+    }
+
+    /* ── WEBRTC WIDGET POSITION: bottom-right, left of webchat ── */
+    #webrtc-widget-root,
+    #cognigy-webrtc-root,
+    [class*="webrtc"],
+    [id*="webrtc"],
+    [class*="click-to-call"],
+    [id*="click-to-call"] {
+      right: 90px !important;
+      left: auto !important;
+      bottom: 3px !important;
+    }
+
+    /* Nudge transcript to the left */
+    .webrtc_widget_transcript_wrapper {
+      transform: translateX(-160px) !important;
     }
   </style>
 </head>
@@ -736,8 +753,8 @@
     "https://endpoint-trial.cognigy.ai/6b94b5eab0e4d4de0ef373d10145bb4636f90572228099802bba8a80d706856a"
   );
 
-  // Force webchat to bottom-left after it renders
-  function moveWebchatLeft() {
+  // Force webchat to bottom-right after it renders
+  function positionWebchat() {
     var selectors = [
       '#webchat-root',
       '#cognigy-webchat-root',
@@ -749,17 +766,17 @@
     selectors.forEach(function(sel) {
       var el = document.querySelector(sel);
       if (el) {
-        el.style.setProperty('left', '20px', 'important');
-        el.style.setProperty('right', 'auto', 'important');
+        el.style.setProperty('right', '20px', 'important');
+        el.style.setProperty('left', 'auto', 'important');
         el.style.setProperty('bottom', '20px', 'important');
         found = true;
       }
     });
     if (!found) {
-      setTimeout(moveWebchatLeft, 300);
+      setTimeout(positionWebchat, 300);
     }
   }
-  setTimeout(moveWebchatLeft, 500);
+  setTimeout(positionWebchat, 500);
 </script>
 
 <script src="https://github.com/Cognigy/click-to-call-widget/releases/latest/download/webRTCWidget.js"></script>
@@ -769,6 +786,32 @@
       window.initWebRTCWidget("https://endpoint-trial.cognigy.ai/7efe4615fa3af93aa0652dd28e2ff35ac3b83e21e2f45c93b44ec4f19ee65e5f");
     }
   });
+
+  // Force WebRTC widget to bottom-left after it renders
+  function positionWebRTC() {
+    var selectors = [
+      '#webrtc-widget-root',
+      '#cognigy-webrtc-root',
+      '[id*="webrtc"]',
+      '[class*="webrtc"]',
+      '[id*="click-to-call"]',
+      '[class*="click-to-call"]'
+    ];
+    var found = false;
+    selectors.forEach(function(sel) {
+      var el = document.querySelector(sel);
+      if (el) {
+        el.style.setProperty('right', '90px', 'important');
+        el.style.setProperty('left', 'auto', 'important');
+        el.style.setProperty('bottom', '3px', 'important');
+        found = true;
+      }
+    });
+    if (!found) {
+      setTimeout(positionWebRTC, 300);
+    }
+  }
+  setTimeout(positionWebRTC, 1000);
 </script>
 
 </body>

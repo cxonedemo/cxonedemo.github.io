@@ -3,40 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YourTelco — Connecting the UK, Simply</title>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <title>NiCE Telco — Connecting the UK, Simply</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --blue: #06499b;
-      --dark-blue: #04346f;
-      --orange: #ff5a00;
-      --soft-orange: #fff1e8;
-      --bg: #f4f7fb;
+      --blue: #553A99;
+      --dark-blue: #2C1B54;
+      --orange: #D52685;
+      --soft-orange: #fbeaf3;
+      --bg: #f6f4fb;
       --card-white: #ffffff;
       --text: #111827;
       --muted: #6b7280;
       --border: #e5e7eb;
       --success: #16a34a;
-      --charcoal: #04346f;
-      --warm-white: #f4f7fb;
+      --charcoal: #2C1B54;
+      --warm-white: #f6f4fb;
       --white: #ffffff;
-      --gradient: linear-gradient(135deg, #06499b 0%, #04346f 50%, #ff5a00 100%);
-      --nice-blue: #06499b;
-      --teal: #ff5a00;
+      --gradient: linear-gradient(135deg, #553A99 0%, #2C1B54 50%, #D52685 100%);
+      --nice-blue: #553A99;
+      --teal: #D52685;
     }
-
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      font-family: 'Poppins', Arial, sans-serif;
       font-weight: 300;
       color: var(--charcoal);
       background: var(--bg);
       overflow-x: hidden;
     }
-
     /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -48,12 +44,13 @@
       height: 72px;
       overflow: visible;
     }
-    .nav-logo { display: flex; align-items: center; gap: 0; }
+    .nav-logo { display: flex; align-items: center; gap: 12px; }
     .nav-logo-icon {
       width: 40px; height: 40px;
       background: var(--blue);
-      border-radius: 30%;
+      border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
     }
     .nav-logo-text { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.03em; color: var(--charcoal); }
     .nav-logo-text span { color: var(--orange); }
@@ -63,15 +60,14 @@
     .nav-cta {
       background: var(--orange); color: #fff;
       border: none; border-radius: 9999px;
-      padding: 10px 24px; font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      padding: 10px 24px; font-family: 'Poppins', Arial, sans-serif;
       font-weight: 500; font-size: 0.938rem; cursor: pointer;
       transition: opacity 0.2s;
     }
     .nav-cta:hover { opacity: 0.88; }
-
     /* ── HERO ── */
     .hero {
-      background: linear-gradient(135deg, #06499b 0%, #04346f 60%, #ff5a00 100%);
+      background: linear-gradient(135deg, #553A99 0%, #2C1B54 60%, #D52685 100%);
       min-height: 100vh;
       display: flex; flex-direction: column; justify-content: center;
       padding: 120px 80px 80px;
@@ -88,7 +84,7 @@
       content: '';
       position: absolute; bottom: -100px; left: 20%;
       width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(255,90,0,0.12) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(213,38,133,0.12) 0%, transparent 70%);
       border-radius: 50%;
     }
     .hero-badge {
@@ -118,7 +114,7 @@
     .btn-white {
       background: #fff; color: var(--charcoal);
       border: none; border-radius: 9999px;
-      padding: 14px 32px; font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      padding: 14px 32px; font-family: 'Poppins', Arial, sans-serif;
       font-weight: 600; font-size: 1rem; cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
     }
@@ -127,12 +123,11 @@
       background: transparent; color: #fff;
       border: 2px solid rgba(255,255,255,0.6);
       border-radius: 9999px; padding: 14px 32px;
-      font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      font-family: 'Poppins', Arial, sans-serif;
       font-weight: 500; font-size: 1rem; cursor: pointer;
       transition: background 0.2s;
     }
     .btn-ghost:hover { background: rgba(255,255,255,0.1); }
-
     /* Hero chat bubbles floating */
     .hero-illustration {
       position: absolute; right: 60px; top: 50%;
@@ -141,7 +136,6 @@
       pointer-events: none;
     }
     .hero-illustration svg { width: 100%; height: 100%; }
-
     /* ── STATS ── */
     .stats {
       background: var(--dark-blue);
@@ -151,7 +145,6 @@
     .stat { text-align: center; }
     .stat-value { font-size: 2.5rem; font-weight: 600; color: var(--orange); letter-spacing: -0.03em; }
     .stat-label { font-size: 0.938rem; color: rgba(255,255,255,0.6); margin-top: 6px; font-weight: 300; }
-
     /* ── SECTION ── */
     section { padding: 96px 80px; }
     .section-label {
@@ -168,7 +161,6 @@
       font-size: 1.1rem; font-weight: 300; color: rgba(33,33,43,0.72);
       max-width: 580px; line-height: 1.55;
     }
-
     /* ── CHALLENGES ── */
     .challenges { background: var(--bg); }
     .challenges-grid {
@@ -187,7 +179,6 @@
     }
     .challenge-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.02em; }
     .challenge-card p { font-size: 0.938rem; font-weight: 300; line-height: 1.55; color: rgba(33,33,43,0.7); }
-
     /* ── SOLUTIONS ── */
     .solutions-grid {
       display: grid; grid-template-columns: repeat(3,1fr);
@@ -201,7 +192,7 @@
       content: '';
       position: absolute; top: -40px; right: -40px;
       width: 150px; height: 150px;
-      background: radial-gradient(circle, rgba(255,90,0,0.18) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(213,38,133,0.18) 0%, transparent 70%);
       border-radius: 50%;
     }
     .solution-card .card-icon { background: rgba(255,255,255,0.08); }
@@ -209,10 +200,9 @@
     .solution-card p { color: rgba(255,255,255,0.6); font-size: 0.938rem; font-weight: 300; line-height: 1.55; }
     .solution-highlight {
       margin-top: 20px; padding: 12px 18px;
-      background: rgba(6,73,155,0.08); border-radius: 12px;
+      background: rgba(85,58,153,0.08); border-radius: 12px;
       color: var(--blue); font-size: 0.875rem; font-weight: 500;
     }
-
     /* ── TESTIMONIAL ── */
     .testimonial {
       background: var(--gradient);
@@ -237,7 +227,6 @@
     }
     .author-name { color: #fff; font-weight: 600; font-size: 0.938rem; }
     .author-role { color: rgba(255,255,255,0.7); font-size: 0.813rem; font-weight: 300; }
-
     /* ── CX JOURNEY ── */
     .journey { background: #fff; }
     .journey-steps {
@@ -252,13 +241,12 @@
     .journey-step { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
     .step-dot {
       width: 56px; height: 56px; border-radius: 50%;
-      background: linear-gradient(135deg, #06499b, #ff5a00);
+      background: linear-gradient(135deg, #553A99, #D52685);
       display: flex; align-items: center; justify-content: center;
       font-size: 1.25rem; margin-bottom: 20px; position: relative; z-index: 1;
     }
     .journey-step h4 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
     .journey-step p { font-size: 0.875rem; font-weight: 300; color: rgba(33,33,43,0.65); line-height: 1.4; padding: 0 12px; }
-
     /* ── NICE PARTNERSHIP ── */
     .partnership {
       background: var(--dark-blue); padding: 80px;
@@ -273,13 +261,13 @@
     .benefit { display: flex; align-items: flex-start; gap: 14px; }
     .benefit-check {
       width: 28px; height: 28px; border-radius: 50%;
-      background: rgba(255,90,0,0.15); color: var(--orange);
+      background: rgba(213,38,133,0.15); color: var(--orange);
       display: flex; align-items: center; justify-content: center;
       font-size: 0.875rem; flex-shrink: 0; margin-top: 2px;
     }
     .benefit-text { color: rgba(255,255,255,0.8); font-size: 0.975rem; font-weight: 300; line-height: 1.5; }
     .partnership-visual {
-      background: linear-gradient(135deg, rgba(6,73,155,0.12), rgba(255,90,0,0.12));
+      background: linear-gradient(135deg, rgba(85,58,153,0.12), rgba(213,38,133,0.12));
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 40px; padding: 48px;
       display: flex; flex-direction: column; gap: 16px;
@@ -289,7 +277,6 @@
     .metric-bar-wrap { flex: 1; margin: 0 20px; background: rgba(255,255,255,0.08); border-radius: 9999px; height: 8px; overflow: hidden; }
     .metric-bar { height: 100%; border-radius: 9999px; background: var(--gradient); }
     .metric-val { color: #fff; font-weight: 600; font-size: 0.938rem; width: 40px; text-align: right; }
-
     /* ── NICE LOGO LOCKUP in partnership ── */
     .nice-lockup {
       display: flex; align-items: center; gap: 20px;
@@ -299,7 +286,6 @@
     }
     .nice-lockup-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.2); }
     .partner-label { color: rgba(255,255,255,0.45); font-size: 0.75rem; font-weight: 300; letter-spacing: 0.06em; }
-
     /* ── CTA SECTION ── */
     .cta-section {
       padding: 96px 80px; text-align: center;
@@ -318,7 +304,7 @@
     .btn-primary {
       background: var(--orange); color: #fff;
       border: none; border-radius: 9999px;
-      padding: 14px 32px; font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      padding: 14px 32px; font-family: 'Poppins', Arial, sans-serif;
       font-weight: 500; font-size: 1rem; cursor: pointer;
       transition: opacity 0.2s;
     }
@@ -327,12 +313,11 @@
       background: transparent; color: var(--charcoal);
       border: 2px solid rgba(33,33,43,0.25);
       border-radius: 9999px; padding: 14px 32px;
-      font-family: 'Be Vietnam Pro', Arial, sans-serif;
+      font-family: 'Poppins', Arial, sans-serif;
       font-weight: 500; font-size: 1rem; cursor: pointer;
       transition: border-color 0.2s;
     }
     .btn-outline:hover { border-color: var(--charcoal); }
-
     /* ── FOOTER ── */
     footer {
       background: var(--dark-blue); padding: 60px 80px 40px;
@@ -352,16 +337,14 @@
       padding-top: 32px;
     }
     .footer-bottom p { color: rgba(255,255,255,0.35); font-size: 0.813rem; font-weight: 300; }
-
     /* ── NiCE partner badge ── */
     .nice-partner-badge {
       display: inline-flex; align-items: center; gap: 10px;
-      background: rgba(6,73,155,0.08); border: 1px solid rgba(6,73,155,0.2);
+      background: rgba(85,58,153,0.08); border: 1px solid rgba(85,58,153,0.2);
       border-radius: 9999px; padding: 8px 20px 8px 10px;
       margin-bottom: 32px;
     }
     .nice-partner-badge span { color: var(--blue); font-size: 0.813rem; font-weight: 500; }
-
     @media (max-width: 1100px) {
       .hero-illustration { display: none; }
       .challenges-grid, .solutions-grid, .partnership { grid-template-columns: 1fr; }
@@ -375,7 +358,6 @@
       .journey-steps::before { display: none; }
       .footer-top { grid-template-columns: 1fr; }
     }
-
     /* ── WEBCHAT POSITION: bottom-right ── */
     #webchat-root,
     #cognigy-webchat-root,
@@ -386,7 +368,6 @@
       left: auto !important;
       bottom: 20px !important;
     }
-
     /* ── WEBRTC WIDGET POSITION: bottom-right, left of webchat ── */
     #webrtc-widget-root,
     #cognigy-webrtc-root,
@@ -398,7 +379,6 @@
       left: auto !important;
       bottom: 3px !important;
     }
-
     /* Nudge transcript to the left */
     .webrtc_widget_transcript_wrapper {
       transform: translateX(-160px) !important;
@@ -406,11 +386,11 @@
   </style>
 </head>
 <body>
-
 <!-- NAV -->
 <nav>
   <div class="nav-logo">
-    <img src="https://i.ibb.co/Vk4BDXG/29650b49-b71f-43c5-9339-f20ec2183dd6.png" alt="YourTelco" style="height:116px; width:auto; object-fit:contain; mix-blend-mode:multiply; display:block; position:relative; z-index:101;"/>
+    <div class="nav-logo-icon"><span style="color:#fff;font-weight:700;font-size:0.85rem;letter-spacing:-0.02em;">NT</span></div>
+    <div class="nav-logo-text">NiCE<span> Telco</span></div>
   </div>
   <ul class="nav-links">
     <li><a href="#solutions">Solutions</a></li>
@@ -420,7 +400,6 @@
   </ul>
   <button class="nav-cta">Get a quote</button>
 </nav>
-
 <!-- HERO -->
 <section class="hero">
   <div class="hero-badge">
@@ -428,12 +407,11 @@
     UK's most trusted telecoms partner
   </div>
   <h1>Connectivity that keeps your business moving</h1>
-  <p class="hero-sub">From broadband to cloud telephony, YourTelco gives UK businesses the infrastructure they need — and the support that actually picks up the phone.</p>
+  <p class="hero-sub">From broadband to cloud telephony, NiCE Telco gives UK businesses the infrastructure they need — and the support that actually picks up the phone.</p>
   <div class="hero-actions">
     <button class="btn-white">Explore our plans</button>
     <button class="btn-ghost">Talk to an expert</button>
   </div>
-
   <!-- Hero illustration -->
   <div class="hero-illustration">
     <svg viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -465,7 +443,7 @@
       <circle cx="210" cy="210" r="38" fill="rgba(255,255,255,0.12)"/>
       <circle cx="210" cy="222" r="9" fill="white"/>
       <path d="M191,207 C191,196 200,188 210,188 C220,188 229,196 229,207" stroke="white" stroke-width="8" stroke-linecap="round" fill="none"/>
-      <path d="M176,196 C176,178 191,164 210,164 C229,164 244,178 244,196" stroke="rgba(255,200,150,0.6)" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M176,196 C176,178 191,164 210,164 C229,164 244,178 244,196" stroke="rgba(230,160,230,0.6)" stroke-width="6" stroke-linecap="round" fill="none"/>
       <circle cx="210" cy="210" r="60" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none">
         <animate attributeName="r" values="52;80;52" dur="3s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite"/>
@@ -473,7 +451,6 @@
     </svg>
   </div>
 </section>
-
 <!-- STATS -->
 <div class="stats">
   <div class="stat">
@@ -493,12 +470,11 @@
     <div class="stat-label">Average answer time, no bots</div>
   </div>
 </div>
-
 <!-- CHALLENGES -->
 <section class="challenges" id="solutions">
   <div class="section-label">The problem we solve</div>
   <h2 class="section-title">Business telecoms shouldn't be this hard</h2>
-  <p class="section-body">We hear it every day. Outages with no updates. Support teams that can't see your history. Bills that don't add up. YourTelco was built to fix exactly that.</p>
+  <p class="section-body">We hear it every day. Outages with no updates. Support teams that can't see your history. Bills that don't add up. NiCE Telco was built to fix exactly that.</p>
   <div class="challenges-grid">
     <div class="challenge-card">
       <div class="card-icon">📞</div>
@@ -518,11 +494,10 @@
     <div class="challenge-card">
       <div class="card-icon">📊</div>
       <h3>Complexity at scale</h3>
-      <p>Growing businesses need telecoms that grow with them. ConnectGroup's elastic plans let you add lines, locations, and capacity without the contract headache.</p>
+      <p>Growing businesses need telecoms that grow with them. NiCE Telco's elastic plans let you add lines, locations, and capacity without the contract headache.</p>
     </div>
   </div>
 </section>
-
 <!-- SOLUTIONS -->
 <section id="business">
   <div class="section-label">What we offer</div>
@@ -567,11 +542,10 @@
     </div>
   </div>
 </section>
-
 <!-- TESTIMONIAL -->
 <section class="testimonial">
   <div class="testimonial-quote">
-    "We switched to YourTelco and within 90 days our <strong>call resolution rate jumped by 38%.</strong> The team actually knows our business — not just our account number."
+    "We switched to NiCE Telco and within 90 days our <strong>call resolution rate jumped by 38%.</strong> The team actually knows our business — not just our account number."
   </div>
   <div class="testimonial-author">
     <div class="author-avatar">👤</div>
@@ -581,7 +555,6 @@
     </div>
   </div>
 </section>
-
 <!-- CX JOURNEY -->
 <section class="journey">
   <div class="section-label">Customer experience</div>
@@ -610,7 +583,6 @@
     </div>
   </div>
 </section>
-
 <!-- NiCE PARTNERSHIP -->
 <div class="partnership">
   <div>
@@ -626,7 +598,7 @@
       <span>Authorised CXone partner</span>
     </div>
     <h2>Your contact centre, powered by the world's best CX platform</h2>
-    <p>YourTelco's managed contact centre runs on NiCE CXone Mpower — the platform trusted by 85% of the Fortune 100. We bring the technology. You deliver the experience.</p>
+    <p>NiCE Telco's managed contact centre runs on NiCE CXone Mpower — the platform trusted by 85% of the Fortune 100. We bring the technology. You deliver the experience.</p>
     <div class="partnership-benefits">
       <div class="benefit">
         <div class="benefit-check">✓</div>
@@ -666,7 +638,7 @@
       </div>
       <div class="metric-row">
         <div class="metric-label">Abandoned calls</div>
-        <div class="metric-bar-wrap"><div class="metric-bar" style="width:55%;background:linear-gradient(90deg,#ff5a00,#ffaa00)"></div></div>
+        <div class="metric-bar-wrap"><div class="metric-bar" style="width:55%;background:linear-gradient(90deg,#D52685,#ff6fb0)"></div></div>
         <div class="metric-val">−41%</div>
       </div>
       <div class="metric-row">
@@ -674,32 +646,31 @@
         <div class="metric-bar-wrap"><div class="metric-bar" style="width:78%"></div></div>
         <div class="metric-val">+29%</div>
       </div>
-      <div style="margin-top:24px;padding:20px;background:rgba(255,90,0,0.1);border-radius:16px;border:1px solid rgba(255,90,0,0.2);">
+      <div style="margin-top:24px;padding:20px;background:rgba(213,38,133,0.1);border-radius:16px;border:1px solid rgba(213,38,133,0.2);">
         <div style="color:rgba(255,255,255,0.5);font-size:0.75rem;font-weight:300;margin-bottom:6px;">Average payback period</div>
         <div style="color:#fff;font-size:1.75rem;font-weight:600;letter-spacing:-0.03em;">6.5 months</div>
-        <div style="color:rgba(255,255,255,0.45);font-size:0.813rem;font-weight:300;margin-top:4px;">Based on YourTelco customer data, 2024</div>
+        <div style="color:rgba(255,255,255,0.45);font-size:0.813rem;font-weight:300;margin-top:4px;">Based on NiCE Telco customer data, 2024</div>
       </div>
     </div>
   </div>
 </div>
-
 <!-- CTA -->
 <section class="cta-section" id="about">
   <div class="section-label">Ready to connect?</div>
   <h2>Let's build something NiCE together</h2>
-  <p>Join 2.4 million UK businesses who've made YourTelco their telecoms partner. Your first consultation is on us.</p>
+  <p>Join 2.4 million UK businesses who've made NiCE Telco their telecoms partner. Your first consultation is on us.</p>
   <div class="cta-buttons">
     <button class="btn-primary">Get a free consultation</button>
     <button class="btn-outline">Download our brochure</button>
   </div>
 </section>
-
 <!-- FOOTER -->
 <footer>
   <div class="footer-top">
     <div class="footer-brand">
       <div class="nav-logo">
-        <img src="https://i.ibb.co/Vk4BDXG/29650b49-b71f-43c5-9339-f20ec2183dd6.png" alt="YourTelco" height="40" style="object-fit:contain;filter:brightness(0) invert(1);"/>
+        <div class="nav-logo-icon" style="background:#fff;"><span style="color:var(--blue);font-weight:700;font-size:0.85rem;letter-spacing:-0.02em;">NT</span></div>
+        <div class="nav-logo-text" style="color:#fff;">NiCE<span> Telco</span></div>
       </div>
       <p>UK-based business telecoms built around your success. Connectivity, cloud telephony, mobile, and CX — all in one place.</p>
     </div>
@@ -716,7 +687,7 @@
     <div class="footer-col">
       <h5>Company</h5>
       <ul>
-        <li><a href="#">About YourTelco</a></li>
+        <li><a href="#">About NiCE Telco</a></li>
         <li><a href="#">Partners</a></li>
         <li><a href="#">Careers</a></li>
         <li><a href="#">Press</a></li>
@@ -735,7 +706,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 YourTelco Ltd. Registered in England & Wales. No. 09123456.</p>
+    <p>© 2026 NiCE Telco Ltd. Registered in England & Wales. No. 09123456.</p>
     <p style="display:flex;align-items:center;gap:8px;">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 381.33 381.33" height="18" role="img" aria-label="NiCE smile">
         <circle fill="rgba(255,255,255,0.3)" cx="93.73" cy="93.73" r="31.24"/>
@@ -746,13 +717,11 @@
     </p>
   </div>
 </footer>
-
 <script src="https://github.com/Cognigy/Webchat/releases/latest/download/webchat.js"></script>
 <script>
   initWebchat(
     "https://endpoint-trial.cognigy.ai/6b94b5eab0e4d4de0ef373d10145bb4636f90572228099802bba8a80d706856a"
   );
-
   // Force webchat to bottom-right after it renders
   function positionWebchat() {
     var selectors = [
@@ -778,7 +747,6 @@
   }
   setTimeout(positionWebchat, 500);
 </script>
-
 <script src="https://github.com/Cognigy/click-to-call-widget/releases/latest/download/webRTCWidget.js"></script>
 <script>
   addEventListener("load", (event) => {
@@ -786,7 +754,6 @@
       window.initWebRTCWidget("https://endpoint-trial.cognigy.ai/7efe4615fa3af93aa0652dd28e2ff35ac3b83e21e2f45c93b44ec4f19ee65e5f");
     }
   });
-
   // Force WebRTC widget to bottom-left after it renders
   function positionWebRTC() {
     var selectors = [
@@ -813,6 +780,5 @@
   }
   setTimeout(positionWebRTC, 1000);
 </script>
-
 </body>
 </html>

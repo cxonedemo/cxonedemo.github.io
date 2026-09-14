@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>AvantiGas — Delivery Status</title>
+
+	<!--
+		DUMMY ORDER STATUS PAGE — for the CXone/Cognigy AvantiGas demo.
+
+		Host this as a static page on GitHub Pages (e.g. as index.html in a
+		repo, with Pages enabled on the main branch) and put the resulting
+		URL into your CXone SMS flow. Personalise each SMS link with query
+		string parameters — no backend or database needed, everything is
+		read client-side from the URL:
+
+			?ref=AG-104829            account / order reference
+			&status=out-for-delivery  confirmed | scheduled | out-for-delivery | delivered
+			&name=Peter%20Smith       customer name for the greeting
+			&eta=Wed%2014%20Oct%2C%2010am-2pm   free-text delivery window
+			&litres=1000              litres being delivered (optional)
+			&address=88%20Wood%20Street%2C%20London  delivery address (optional)
+
+		Full example:
+		https://<your-github-username>.github.io/<repo>/?ref=AG-104829&status=out-for-delivery&name=Peter%20Smith&eta=Wed%2014%20Oct%2C%2010am-2pm&litres=1000&address=88%20Wood%20Street%2C%20London
+
+		If a parameter is missing the page falls back to sensible dummy
+		data, so the link still looks right if you open it with no
+		query string at all (handy for quickly eyeballing it before you
+		wire up the real SMS text in CXone Studio).
+	-->
+
+	<style>
+		:root {
+			--avanti-blue: #0a3d62;
+			--avanti-blue-dark: #072a45;
+			--avanti-orange: #f7941e;
+			--avanti-orange-dark: #e07c00;
+			--ink: #1c2b36;
+			--muted: #6b7c88;
+			--line: #e2e8ee;
+			--bg: #f4f7f9;
+			--ok: #1f8a4c;
+		}
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+			background: var(--bg);
+			color: var(--ink);
+		}
+		.card {
+			max-width: 460px;
+			margin: 0 auto;
+			background: #ffffff;
+			min-height: 100vh;
+		}
+		.header {
+			background: linear-gradient(135deg, var(--avanti-blue) 0%, var(--avanti-blue-dark) 100%);
+			padding: 20px 22px 24px;
+			color: #ffffff;
+		}
+		.header img {
+			height: 30px;
+			background: #ffffff;
+			border-radius: 6px;
+			padding: 4px 10px;
+			display: block;
+			margin-bottom: 14px;
+		}
+		.header h1 {
+			margin: 0 0 4px;
+			font-size: 19px;
+			font-weight: 700;
+		}
+		.header p {
+			margin: 0;
+			font-size: 13px;
+			color: #cfe0ee;
+		}
+		.body {
+			padding: 22px 22px 28px;
+		}
+		.ref-strip {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			background: var(--bg);
+			border: 1px solid var(--line);
+			border-radius: 10px;
+			padding: 12px 14px;
+			margin-bottom: 22px;
+		}
+		.ref-strip .label {
+			font-size: 11px;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+			color: var(--muted);
+		}
+		.ref-strip .value {
+			font-size: 14px;
+			font-weight: 600;
+			color: var(--ink);
+		}
+		.eta-banner {
+			background: linear-gradient(135deg, var(--avanti-orange) 0%, var(--avanti-orange-dark) 100%);
+			color: #fff;
+			border-radius: 10px;
+			padding: 14px 16px;
+			margin-bottom: 26px;
+		}
+		.eta-banner .eta-label {
+			font-size: 11px;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+			opacity: 0.9;
+		}
+		.eta-banner .eta-value {
+			font-size: 17px;
+			font-weight: 700;
+			margin-top: 2px;
+		}
+		.timeline {
+			list-style: none;
+			margin: 0 0 26px;
+			padding: 0;
+		}
+		.timeline li {
+			position: relative;
+			padding: 0 0 26px 34px;
+			font-size: 14px;
+		}
+		.timeline li:last-child {
+			padding-bottom: 0;
+		}
+		.timeline li::before {
+			content: "";
+			position: absolute;
+			left: 6px;
+			top: 2px;
+			width: 12px;
+			height: 12px;
+			border-radius: 50%;
+			background: var(--line);
+			border: 2px solid #fff;
+			box-shadow: 0 0 0 2px var(--line);
+			z-index: 1;
+		}
+		.timeline li::after {
+			content: "";
+			position: absolute;
+			left: 11px;
+			top: 14px;
+			width: 2px;
+			height: calc(100% - 8px);
+			background: var(--line);
+		}
+		.timeline li:last-child::after { display: none; }
+		.timeline li .step-title {
+			font-weight: 600;
+			color: var(--muted);
+		}
+		.timeline li .step-detail {
+			color: var(--muted);
+			font-size: 12.5px;
+			margin-top: 2px;
+		}
+		.timeline li.done::before {
+			background: var(--ok);
+			box-shadow: 0 0 0 2px var(--ok);
+		}
+		.timeline li.done::after {
+			background: var(--ok);
+		}
+		.timeline li.done .step-title {
+			color: var(--ink);
+		}
+		.timeline li.current::before {
+			background: var(--avanti-orange);
+			box-shadow: 0 0 0 2px var(--avanti-orange);
+			animation: pulse 1.6s infinite;
+		}
+		.timeline li.current .step-title {
+			color: var(--avanti-blue);
+		}
+		@keyframes pulse {
+			0% { box-shadow: 0 0 0 2px var(--avanti-orange); }
+			70% { box-shadow: 0 0 0 6px rgba(247, 148, 30, 0.25); }
+			100% { box-shadow: 0 0 0 2px var(--avanti-orange); }
+		}
+		.details {
+			background: var(--bg);
+			border: 1px solid var(--line);
+			border-radius: 10px;
+			padding: 14px 16px;
+			margin-bottom: 22px;
+		}
+		.details .row {
+			display: flex;
+			justify-content: space-between;
+			padding: 6px 0;
+			font-size: 13.5px;
+		}
+		.details .row + .row {
+			border-top: 1px solid var(--line);
+		}
+		.details .row .k { color: var(--muted); }
+		.details .row .v { font-weight: 600; }
+		.help {
+			text-align: center;
+			font-size: 13px;
+			color: var(--muted);
+			padding-top: 6px;
+			border-top: 1px solid var(--line);
+		}
+		.help a {
+			color: var(--avanti-blue);
+			font-weight: 600;
+			text-decoration: none;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="card">
+		<div class="header">
+			<img src="https://www.avantigas.com/assets/img/avantilogo.jpg" alt="AvantiGas" />
+			<h1 id="greeting">Delivery Status</h1>
+			<p>LPG suppliers who go above and beyond</p>
+		</div>
+
+		<div class="body">
+
+			<div class="ref-strip">
+				<div>
+					<div class="label">Account</div>
+					<div class="value" id="refDisplay">AG-104829</div>
+				</div>
+				<div style="text-align:right">
+					<div class="label">Delivery</div>
+					<div class="value" id="litresDisplay">1,000 litres</div>
+				</div>
+			</div>
+
+			<div class="eta-banner">
+				<div class="eta-label">Estimated arrival</div>
+				<div class="eta-value" id="etaDisplay">Wednesday 14 Oct, 10am–2pm</div>
+			</div>
+
+			<ul class="timeline" id="timeline">
+				<li id="step-confirmed">
+					<div class="step-title">Order confirmed</div>
+					<div class="step-detail">We've scheduled your LPG top-up.</div>
+				</li>
+				<li id="step-scheduled">
+					<div class="step-title">Delivery scheduled</div>
+					<div class="step-detail">Your delivery window has been set.</div>
+				</li>
+				<li id="step-out-for-delivery">
+					<div class="step-title">Out for delivery</div>
+					<div class="step-detail">Our driver is on the way.</div>
+				</li>
+				<li id="step-delivered">
+					<div class="step-title">Delivered</div>
+					<div class="step-detail">Tank topped up — all done.</div>
+				</li>
+			</ul>
+
+			<div class="details">
+				<div class="row"><span class="k">Delivery address</span><span class="v" id="addressDisplay">88 Wood Street, London</span></div>
+				<div class="row"><span class="k">Driver</span><span class="v" id="driverDisplay">Not yet assigned</span></div>
+			</div>
+
+			<div class="help">
+				Need to change something? <a href="https://www.avantigas.com/help-and-support">Contact AvantiGas</a>
+			</div>
+
+		</div>
+	</div>
+
+	<script>
+		// ---- Dummy ETA default: always "N days from today", rolled forward
+		// off any weekend, so the demo never shows a stale date. Only used
+		// when the SMS link doesn't pass its own ?eta= value. ----
+		function defaultEta(daysFromNow) {
+			const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+			const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+			const target = new Date();
+			target.setDate(target.getDate() + daysFromNow);
+
+			const day = target.getDay();
+			if (day === 6) target.setDate(target.getDate() + 2); // Sat -> Mon
+			if (day === 0) target.setDate(target.getDate() + 1); // Sun -> Mon
+
+			const weekday = weekdayNames[target.getDay()];
+			const dayOfMonth = target.getDate();
+			const month = monthNames[target.getMonth()];
+
+			return `${weekday} ${dayOfMonth} ${month}, 10am–2pm`;
+		}
+
+		// ---- Read everything from the URL query string, with dummy fallbacks ----
+		const params = new URLSearchParams(window.location.search);
+
+		const ref = params.get('ref') || 'AG-104829';
+		const status = (params.get('status') || 'scheduled').toLowerCase();
+		const name = params.get('name') || 'Peter Smith';
+		const eta = params.get('eta') || defaultEta(30);
+		const litres = params.get('litres') || '1,000';
+		const address = params.get('address') || '88 Wood Street, London';
+		const driver = params.get('driver') || '';
+
+		document.getElementById('refDisplay').textContent = ref;
+		document.getElementById('etaDisplay').textContent = eta;
+		document.getElementById('litresDisplay').textContent = litres + ' litres';
+		document.getElementById('addressDisplay').textContent = address;
+		document.getElementById('greeting').textContent = name ? `Hi ${name}, here's your delivery` : 'Delivery Status';
+
+		// Driver only shown once the driver is actually en route
+		if (status === 'out-for-delivery' && driver) {
+			document.getElementById('driverDisplay').textContent = driver;
+		} else if (status === 'out-for-delivery') {
+			document.getElementById('driverDisplay').textContent = 'Assigned — details shortly';
+		} else if (status === 'delivered') {
+			document.getElementById('driverDisplay').textContent = driver || 'Completed';
+		}
+
+		// ---- Drive the timeline off the status param ----
+		const stepOrder = ['confirmed', 'scheduled', 'out-for-delivery', 'delivered'];
+		const currentIndex = stepOrder.indexOf(status) === -1 ? 1 : stepOrder.indexOf(status);
+
+		stepOrder.forEach((step, i) => {
+			const el = document.getElementById('step-' + step);
+			if (!el) return;
+			el.classList.remove('done', 'current');
+			if (i < currentIndex) el.classList.add('done');
+			if (i === currentIndex) el.classList.add('current');
+		});
+
+		// Once delivered, mark every step (including "delivered" itself) as done
+		if (status === 'delivered') {
+			document.getElementById('step-delivered').classList.add('done');
+			document.getElementById('step-delivered').classList.remove('current');
+			document.querySelector('.eta-banner .eta-label').textContent = 'Delivered';
+		}
+	</script>
+
+	<!-- Cognigy Webchat Widget (AvantiGas Ava demo) -->
+	<script src="https://github.com/Cognigy/Webchat/releases/latest/download/webchat.js"></script>
+	<script>
+		initWebchat(
+			"https://endpoint-trial.cognigy.ai/3026ea699e83b4c94c84374d5d469fac0fcabbff5f29b8ac8f295eb36d2832e2"
+		);
+	</script>
+
+</body>
+
+</html>

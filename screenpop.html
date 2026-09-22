@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>AvantiGas — IVR Journey</title>
+
+	<style>
+		:root {
+			--avanti-blue: #0a3d62;
+			--avanti-blue-dark: #072a45;
+			--avanti-orange: #f7941e;
+			--ink: #1c2b36;
+			--muted: #6b7c88;
+			--line: #e2e8ee;
+			--bg: #f4f7f9;
+			--ok: #1f8a4c;
+			--ok-bg: #e7f5ec;
+			--amber: #b06b00;
+			--amber-bg: #fdf1dc;
+		}
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+			background: var(--bg);
+			color: var(--ink);
+		}
+		.panel {
+			width: 100%;
+			max-width: 640px;
+			margin: 0 auto;
+			background: #ffffff;
+			min-height: 100vh;
+		}
+		.header {
+			background: linear-gradient(135deg, var(--avanti-blue) 0%, var(--avanti-blue-dark) 100%);
+			padding: 20px 22px 22px;
+			color: #ffffff;
+		}
+		.header img {
+			height: 26px;
+			background: #ffffff;
+			border-radius: 6px;
+			padding: 4px 10px;
+			display: block;
+			margin-bottom: 14px;
+		}
+		.header h1 {
+			margin: 0 0 2px;
+			font-size: 17px;
+			font-weight: 700;
+		}
+		.header p {
+			margin: 0;
+			font-size: 12.5px;
+			color: #cfe0ee;
+		}
+		.customer-strip {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 14px;
+			background: rgba(255,255,255,0.08);
+			border: 1px solid rgba(255,255,255,0.18);
+			border-radius: 10px;
+			padding: 12px 16px;
+			margin-top: 16px;
+		}
+		.customer-strip .name {
+			font-size: 15px;
+			font-weight: 700;
+		}
+		.customer-strip .sub {
+			font-size: 12px;
+			color: #cfe0ee;
+			margin-top: 2px;
+		}
+		.customer-strip .acct-block {
+			text-align: center;
+			font-size: 11.5px;
+			color: #cfe0ee;
+		}
+		.customer-strip .acct-block .value {
+			font-weight: 700;
+			color: #ffffff;
+			letter-spacing: 0.02em;
+			margin-top: 2px;
+		}
+		.customer-strip .lang {
+			text-align: right;
+			font-size: 11.5px;
+			color: #cfe0ee;
+		}
+		.body {
+			padding: 18px 22px 26px;
+		}
+		.auth-badge {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			border-radius: 10px;
+			padding: 12px 14px;
+			margin-bottom: 20px;
+			font-size: 13.5px;
+			font-weight: 600;
+		}
+		.auth-badge.pass {
+			background: var(--ok-bg);
+			color: var(--ok);
+			border: 1px solid #c7e8d4;
+		}
+		.auth-badge.warn {
+			background: var(--amber-bg);
+			color: var(--amber);
+			border: 1px solid #f2ddb0;
+		}
+		.auth-badge .icon {
+			width: 22px;
+			height: 22px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 13px;
+			flex-shrink: 0;
+			color: #ffffff;
+		}
+		.auth-badge.pass .icon { background: var(--ok); }
+		.auth-badge.warn .icon { background: var(--amber); }
+		.section-label {
+			font-size: 11px;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			color: var(--muted);
+			font-weight: 700;
+			margin: 0 0 12px;
+		}
+		.timeline {
+			list-style: none;
+			margin: 0 0 22px;
+			padding: 0;
+		}
+		.timeline li {
+			position: relative;
+			padding: 0 0 20px 30px;
+		}
+		.timeline li:last-child {
+			padding-bottom: 0;
+		}
+		.timeline li::before {
+			content: "";
+			position: absolute;
+			left: 8px;
+			top: 18px;
+			bottom: -2px;
+			width: 2px;
+			background: var(--line);
+		}
+		.timeline li:last-child::before {
+			display: none;
+		}
+		.dot {
+			position: absolute;
+			left: 0;
+			top: 2px;
+			width: 18px;
+			height: 18px;
+			border-radius: 50%;
+			background: var(--avanti-blue);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.dot::after {
+			content: "";
+			width: 6px;
+			height: 6px;
+			border-radius: 50%;
+			background: #ffffff;
+		}
+		.timeline li.flag .dot {
+			background: var(--amber);
+		}
+		.step-text {
+			font-size: 13.5px;
+			line-height: 1.4;
+			color: var(--ink);
+			padding-top: 1px;
+		}
+		.timeline li.flag .step-text {
+			color: var(--amber);
+			font-weight: 600;
+		}
+		.outcome-strip {
+			background: var(--bg);
+			border: 1px solid var(--line);
+			border-radius: 10px;
+			padding: 14px 16px;
+		}
+		.outcome-strip .label {
+			font-size: 11px;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+			color: var(--muted);
+			font-weight: 700;
+			margin-bottom: 5px;
+		}
+		.outcome-strip .value {
+			font-size: 13.5px;
+			font-weight: 600;
+			color: var(--ink);
+			line-height: 1.4;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="panel">
+		<div class="header">
+			<img src="https://www.avantigas.com/assets/img/avantilogo.jpg" alt="AvantiGas" />
+			<h1>IVR Journey</h1>
+			<p>Self-service path before this call reached an agent</p>
+
+			<div class="customer-strip">
+				<div>
+					<div class="name" id="customerName">Peter Smith</div>
+					<div class="sub" id="customerAni">07748147666</div>
+				</div>
+				<div class="acct-block">
+					<div>Account</div>
+					<div class="value" id="customerAccount">AG-104829</div>
+				</div>
+				<div class="lang">
+					<div>Language</div>
+					<div id="customerLang" style="font-weight:600; color:#fff;">English (UK)</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="body">
+
+			<div class="auth-badge pass" id="authBadge">
+				<div class="icon" id="authIcon">&#10003;</div>
+				<div id="authText">Verified in IVR — no re-authentication required</div>
+			</div>
+
+			<div class="section-label">Call path</div>
+			<ul class="timeline" id="timeline"></ul>
+
+			<div class="outcome-strip">
+				<div class="label">Outcome</div>
+				<div class="value" id="outcomeText">Transferred to agent after payment attempt</div>
+			</div>
+
+		</div>
+	</div>
+
+	<script>
+		// ---- Parse whatever a Studio POPURL (or any caller) passed on the query string ----
+		// Expected params: name, ani, lang, auth, outcome, path (pipe-separated steps, url-encoded)
+		// Every param has a sensible fallback so the page renders a complete mock
+		// on its own, e.g. when opened directly from a GitHub Pages link with no query string.
+		const q = new URLSearchParams(window.location.search);
+
+		function param(key, fallback) {
+			const v = q.get(key);
+			return (v === null || v === "") ? fallback : v;
+		}
+
+		const LANG_LABELS = {
+			"en-GB": "English (UK)",
+			"en-US": "English (US)",
+			"fr-FR": "French",
+			"de-DE": "German",
+			"es-ES": "Spanish"
+		};
+
+		const customerName = param("name", "Peter Smith");
+		const ani = param("ani", "07748147666");
+		const account = param("acct", "AG-104829");
+		const langRaw = param("lang", "en-GB");
+		const lang = LANG_LABELS[langRaw] || langRaw;
+		const authStatus = param("auth", "Verified in IVR");
+		const outcome = param("outcome", "Transferred to agent after payment attempt");
+
+		const defaultSteps = [
+			"Call received",
+			"Language: English (UK)",
+			"Main menu: 2 – Billing and payments",
+			"Account entered: ****4829",
+			"Authenticated: DOB and postcode",
+			"AI Agent: Delivery ETA given",
+			"Payment started in self service, transferred to agent",
+			"Queued: Billing UK, delivery specialist skill"
+		].join("|");
+
+		const path = param("path", defaultSteps);
+		const steps = path.split("|").map(s => {
+			try { return decodeURIComponent(s); } catch (e) { return s; }
+		}).filter(s => s.length > 0);
+
+		// Steps that read as a self-service hiccup rather than a clean pass,
+		// so they can be flagged in amber on the timeline.
+		const FLAG_PATTERN = /invalid|no input|fail|declin|abandon|reprompt|timeout|not attempted/i;
+
+		document.getElementById("customerName").textContent = customerName;
+		document.getElementById("customerAni").textContent = ani;
+		document.getElementById("customerAccount").textContent = account;
+		document.getElementById("customerLang").textContent = lang;
+		document.getElementById("outcomeText").textContent = outcome;
+
+		const authFailed = /fail/i.test(authStatus) || /not attempted/i.test(authStatus);
+		const authBadge = document.getElementById("authBadge");
+		const authIcon = document.getElementById("authIcon");
+		const authText = document.getElementById("authText");
+
+		if (authFailed) {
+			authBadge.classList.remove("pass");
+			authBadge.classList.add("warn");
+			authIcon.innerHTML = "!";
+			authText.textContent = authStatus;
+		} else {
+			authText.textContent = authStatus + " — no re-authentication required";
+		}
+
+		const timeline = document.getElementById("timeline");
+		steps.forEach(step => {
+			const li = document.createElement("li");
+			if (FLAG_PATTERN.test(step)) li.classList.add("flag");
+
+			const dot = document.createElement("span");
+			dot.className = "dot";
+
+			const text = document.createElement("div");
+			text.className = "step-text";
+			text.textContent = step;
+
+			li.appendChild(dot);
+			li.appendChild(text);
+			timeline.appendChild(li);
+		});
+	</script>
+
+</body>
+
+</html>
